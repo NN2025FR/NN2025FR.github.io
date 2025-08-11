@@ -1,0 +1,104 @@
+{
+  "name": "",
+  "type": "dir",
+  "children": [
+    {
+      "name": "Básicas",
+      "type": "dir",
+      "children": [
+        {
+          "name": "Análisis Matemático I",
+          "type": "dir",
+          "children": [
+            { "name": "Parciales", "type": "dir", "children": [] },
+            { "name": "Finales", "type": "dir", "children": [] },
+            { "name": "Material de estudio", "type": "dir", "children": [] }
+          ]
+        },
+        {
+          "name": "Física I",
+          "type": "dir",
+          "children": [
+            {
+              "name": "Parciales",
+              "type": "dir",
+              "children": [
+                {
+                  "name": "Parcial-25-06-23-_Hecho_.pdf",
+                  "type": "file",
+                  "ext": "pdf",
+                  "date": "2025-06-23",
+                  "url": "https://example.com/demo/fisica1-parcial.pdf"
+                }
+              ]
+            },
+            { "name": "Finales", "type": "dir", "children": [] },
+            { "name": "Material de estudio", "type": "dir", "children": [] }
+          ]
+        },
+        {
+          "name": "Física II",
+          "type": "dir",
+          "children": [
+            {
+              "name": "Parciales",
+              "type": "dir",
+              "children": [
+                {
+                  "name": "Parcial 25-06-11 (Hecho).jpeg",
+                  "type": "file",
+                  "ext": "jpg",
+                  "date": "2025-06-11",
+                  "url": "files/parcial-demo.jpg"
+                }
+              ]
+            },
+            { "name": "Finales", "type": "dir", "children": [] },
+            { "name": "Material de estudio", "type": "dir", "children": [] }
+          ]
+        },
+        {
+          "name": "Probabilidad y Estadística",
+          "type": "dir",
+          "children": [
+            { "name": "Parciales", "type": "dir", "children": [] },
+            { "name": "Finales", "type": "dir", "children": [] },
+            { "name": "Material de estudio", "type": "dir", "children": [] }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Ingeniería Civil",
+      "type": "dir",
+      "children": [
+        { "name": "1º año", "type": "dir", "children": [ { "name": "Ingeniería Civil I", "type": "dir", "children": [ { "name": "Parciales", "type": "dir", "children": [] }, { "name": "Finales", "type": "dir", "children": [] }, { "name": "Material de estudio", "type": "dir", "children": [] } ] } ] },
+        { "name": "2º año", "type": "dir", "children": [ { "name": "Estabilidad", "type": "dir", "children": [ { "name": "Parciales", "type": "dir", "children": [] }, { "name": "Finales", "type": "dir", "children": [] }, { "name": "Material de estudio", "type": "dir", "children": [] } ] }, { "name": "Ingeniería Civil II", "type": "dir", "children": [ { "name": "Parciales", "type": "dir", "children": [] }, { "name": "Finales", "type": "dir", "children": [] }, { "name": "Material de estudio", "type": "dir", "children": [] } ] }, { "name": "Tecnología de los Materiales", "type": "dir", "children": [ { "name": "Parciales", "type": "dir", "children": [] }, { "name": "Finales", "type": "dir", "children": [] }, { "name": "Material de estudio", "type": "dir", "children": [] } ] } ] },
+        { "name": "3º año", "type": "dir", "children": [ { "name": "Resistencia de Materiales", "type": "dir", "children": [ { "name": "Parciales", "type": "dir", "children": [] }, { "name": "Finales", "type": "dir", "children": [] }, { "name": "Material de estudio", "type": "dir", "children": [] } ] }, { "name": "Tecnología del Hormigón", "type": "dir", "children": [ { "name": "Parciales", "type": "dir", "children": [] }, { "name": "Finales", "type": "dir", "children": [] }, { "name": "Material de estudio", "type": "dir", "children": [] } ] } ] }
+      ]
+    },
+    {
+      "name": "Ingeniería en Energía Eléctrica",
+      "type": "dir",
+      "children": [
+        { "name": "1º año", "type": "dir", "children": [ { "name": "Integración Eléctrica I (Int)", "type": "dir", "children": [ { "name": "Parciales", "type": "dir", "children": [] }, { "name": "Finales", "type": "dir", "children": [] }, { "name": "Material de estudio", "type": "dir", "children": [] } ] } ] },
+        { "name": "2º año", "type": "dir", "children": [ { "name": "Electrotecnia I", "type": "dir", "children": [ { "name": "Parciales", "type": "dir", "children": [] }, { "name": "Finales", "type": "dir", "children": [] }, { "name": "Material de estudio", "type": "dir", "children": [] } ] }, { "name": "Integración Eléctrica II (Int)", "type": "dir", "children": [ { "name": "Parciales", "type": "dir", "children": [] }, { "name": "Finales", "type": "dir", "children": [] }, { "name": "Material de estudio", "type": "dir", "children": [] } ] } ] }
+      ]
+    },
+    {
+      "name": "Ingeniería en Industria Automotriz",
+      "type": "dir",
+      "children": [
+        { "name": "1º año", "type": "dir", "children": [ { "name": "Ingeniería en la Industria Automotriz I", "type": "dir", "children": [ { "name": "Parciales", "type": "dir", "children": [] }, { "name": "Finales", "type": "dir", "children": [] }, { "name": "Material de estudio", "type": "dir", "children": [] } ] } ] }
+      ]
+    },
+    {
+      "name": "Ingeniería Mecánica",
+      "type": "dir",
+      "children": [
+        { "name": "1º año", "type": "dir", "children": [ { "name": "Ingeniería Mecánica I", "type": "dir", "children": [ { "name": "Parciales", "type": "dir", "children": [] }, { "name": "Finales", "type": "dir", "children": [] }, { "name": "Material de estudio", "type": "dir", "children": [] } ] } ] },
+        { "name": "2º año", "type": "dir", "children": [ { "name": "Estabilidad I", "type": "dir", "children": [ { "name": "Parciales", "type": "dir", "children": [] }, { "name": "Finales", "type": "dir", "children": [] }, { "name": "Material de estudio", "type": "dir", "children": [] } ] } ] }
+      ]
+    }
+  ]
+}
