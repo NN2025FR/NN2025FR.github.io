@@ -1,0 +1,943 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Biblioteca de FRGP</title>
+  <!--
+    Este archivo es la versión refinada de la biblioteca de exámenes de FRGP/UTN.
+    Se mantiene la estructura general del prototipo original pero se mejoran
+    aspectos de accesibilidad, rendimiento y monetización. El listado se
+    construye a partir de un archivo manifest (index.json). Si dicho archivo
+    no existe o falla la carga se utiliza un dataset de demostración para
+    ilustrar la estructura de carpetas y archivos. Además se incluye un
+    sistema de anuncios con rails persistentes que admite proveedores
+    configurables (Adsense o Ezoic) mediante una bandera de consulta (?ads=).
+    También se preparan ganchos para analítica (GA4) y consent mode v2.
+  -->
+  <meta name="description" content="Archivos de UTN Pacheco — Parciales, Finales y Material de estudio" />
+  <style>
+    :root {
+      --bg: #0b0d10;
+      --panel: #12151a;
+      --text: #e6e8eb;
+      --muted: #9aa3ad;
+      --accent: #4ea1ff;
+      --border: #1f242c;
+      --hover: #151a21;
+      --link: #a6d1ff;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+    }
+    .light {
+      --bg: #f6f8fb;
+      --panel: #ffffff;
+      --text: #101418;
+      --muted: #5b6876;
+      --accent: #0e63ff;
+      --border: #e6eaf0;
+      --hover: #f2f5f9;
+      --link: #0e63ff;
+      --shadow: 0 8px 20px rgba(0,0,0,.08);
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font: 14px/1.45 system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overscroll-behavior-y: contain;
+    }
+    a {
+      color: var(--link);
+      text-decoration: none;
+    }
+
+    /* Layout general con rails de anuncios persistentes */
+    .grid {
+      display: grid;
+      grid-template-columns: 240px minmax(0, 1fr) 240px;
+      min-height: 100vh;
+    }
+    .ad-rail {
+      background: var(--panel);
+      border-right: 1px solid var(--border);
+      border-left: 1px solid var(--border);
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 12px;
+      position: relative;
+    }
+    /* Las zonas de anuncios reservan su espacio para evitar reflujo (CLS) */
+    .ad-slot {
+      width: 90%;
+      min-height: 600px;
+      border: 1px dashed var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      color: var(--muted);
+      font-size: 12px;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    /* Centro (contenido) */
+    #center { position: relative; }
+    .wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 24px 16px 64px;
+    }
+    header.site {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .title {
+      display: flex;
+      gap: 12px;
+      align-items: baseline;
+    }
+    .title h1 {
+      margin: 0;
+      font-size: 22px;
+      letter-spacing: .2px;
+    }
+    .title .sub {
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    button, select, input[type="search"] {
+      background: var(--panel);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 10px 12px;
+      border-radius: 10px;
+      box-shadow: var(--shadow);
+    }
+    button:hover, select:hover, input[type="search"]:hover {
+      background: var(--hover);
+    }
+    button { cursor: pointer; }
+    nav.breadcrumbs {
+      font-size: 13px;
+      color: var(--muted);
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      margin: 10px 0 6px;
+      flex-wrap: wrap;
+    }
+    nav.breadcrumbs .sep {
+      opacity: .4;
+    }
+    .toolbar {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 10px;
+      margin: 8px 0 16px;
+    }
+    .toolbar .search { position: relative; }
+    .toolbar .search input {
+      width: 100%;
+      padding-left: 40px;
+    }
+    .toolbar .search svg {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      opacity: .7;
+    }
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      overflow: clip;
+    }
+    .list {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .list thead {
+      background: var(--hover);
+    }
+    .list th, .list td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+      vertical-align: middle;
+    }
+    .list th {
+      font-weight: 600;
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .4px;
+    }
+    .row {
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .nameCell { display: flex; align-items: center; gap: 10px; }
+    .type-badge {
+      display: inline-block;
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+    .empty {
+      padding: 18px 14px;
+      color: var(--muted);
+    }
+
+    /* Efectos hover sutiles en filas. Se reducen con prefers-reduced-motion */
+    .list tr:hover { background: var(--hover); }
+    @media (prefers-reduced-motion: no-preference) {
+      .list tr { transition: background 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease; }
+      .list tr:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      }
+    }
+    
+    /* PREVIEW dentro del ancho del contenido (sólo cubre el área central) */
+    .preview-overlay {
+      position: absolute;
+      inset: 0;
+      display: none;
+      align-items: flex-start;
+      justify-content: center;
+      background: rgba(0,0,0,.4);
+      backdrop-filter: saturate(120%) blur(1px);
+      z-index: 40;
+    }
+    .preview-card {
+      margin-top: 24px;
+      width: min(1100px, calc(100% - 64px));
+      max-height: calc(100vh - 48px);
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      position: relative;
+      display: grid;
+      grid-template-columns: 1fr 12px;
+    }
+    .pv-toolbar {
+      position: absolute;
+      left: 0;
+      top: 0;
+      right: 12px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 8px;
+      border-bottom: 1px solid var(--border);
+      background: var(--panel);
+      border-top-left-radius: 14px;
+    }
+    .pv-btn {
+      padding: 8px 10px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--hover);
+      color: var(--text);
+      cursor: pointer;
+    }
+    .pv-title {
+      margin-left: 6px;
+      color: var(--muted);
+      font-size: 13px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .pv-close { font-weight: 700; }
+    .pv-view {
+      overflow: auto;
+      scroll-behavior: smooth;
+      border-top-left-radius: 14px;
+      border-bottom-left-radius: 14px;
+      min-height: 200px;
+    }
+    .pv-scroll {
+      grid-column: 2 / 3;
+      grid-row: 1 / 3;
+      background: var(--hover);
+      border-left: 1px solid var(--border);
+      border-top-right-radius: 14px;
+      border-bottom-right-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .pv-scroll input[type=range] {
+      writing-mode: bt-lr;
+      -webkit-appearance: slider-vertical;
+      height: 80%;
+      width: 10px;
+      background: transparent;
+    }
+    .pv-canvas {
+      display: block;
+      margin: 52px auto 16px; /* deja espacio para toolbar */
+    }
+    .pv-img {
+      display: block;
+      margin: 52px auto 16px;
+      max-width: calc(100% - 24px);
+    }
+    .pv-iframe {
+      display: block;
+      width: 100%;
+      height: calc(100vh - 96px);
+      border: 0;
+      background: #fff;
+      margin-top: 52px;
+    }
+    @media (max-width: 1024px) {
+      .grid { grid-template-columns: 1fr; }
+      .ad-rail { order: 2; }
+      .ad-slot { min-height: 120px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="grid">
+    <!-- Rail izquierda: anuncios persistentes -->
+    <aside class="ad-rail left" id="adRailLeft" aria-label="Anuncios laterales izquierdos">
+      <div id="adLeft" class="ad-slot" aria-live="polite">
+        <!-- Los anuncios se insertan dinámicamente según el proveedor. -->
+        Zona de anuncio (izquierda)
+      </div>
+    </aside>
+
+    <main id="center">
+      <div class="wrap" id="list-shell">
+        <header class="site">
+          <div class="title">
+            <h1>Biblioteca de FRGP</h1>
+            <span class="sub">Archivos de UTN Pacheco</span>
+          </div>
+          <div class="actions">
+            <button id="themeToggle" title="Cambiar tema" aria-label="Cambiar tema">🌓 Modo</button>
+          </div>
+        </header>
+
+        <nav class="breadcrumbs" id="breadcrumbs" aria-label="Migas de navegación"></nav>
+
+        <div class="toolbar">
+          <div class="search">
+            <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="currentColor" d="M10 4a6 6 0 0 1 4.472 9.994l4.267 4.267l-1.414 1.414l-4.267-4.267A6 6 0 1 1 10 4m0 2a4 4 0 1 0 0 8a4 4 0 0 0 0-8"/>
+            </svg>
+            <input id="q" type="search" placeholder="Buscar por nombre…" autocomplete="off" aria-label="Buscar" />
+          </div>
+          <select id="sortBy" aria-label="Ordenar por">
+            <option value="name">Ordenar: Nombre (A→Z)</option>
+            <option value="date">Ordenar: Fecha (reciente primero)</option>
+          </select>
+          <button id="goUp" title="Subir nivel" aria-label="Subir un nivel">⬆️ Subir</button>
+        </div>
+
+        <div class="panel">
+          <table class="list" role="grid" aria-label="Listado de elementos">
+            <thead>
+              <tr><th>Nombre</th><th class="hide-sm">Tipo</th><th class="hide-sm">Fecha</th></tr>
+            </thead>
+            <tbody id="rows"></tbody>
+          </table>
+          <div class="empty" id="empty" hidden>No hay elementos que coincidan.</div>
+        </div>
+      </div>
+
+      <!-- Overlay de PREVIEW (mismo ancho que .wrap) -->
+      <div class="preview-overlay" id="preview" role="dialog" aria-modal="true" aria-label="Visor de archivo">
+        <div class="preview-card">
+          <div class="pv-toolbar">
+            <button class="pv-btn pv-close" id="pv-close" aria-label="Cerrar">✕</button>
+            <button class="pv-btn" id="pv-zoom-out" title="Alejar" aria-label="Alejar">🔍−</button>
+            <button class="pv-btn" id="pv-zoom-in" title="Acercar" aria-label="Acercar">🔍＋</button>
+            <div class="pv-title" id="pv-title" role="heading" aria-level="2"></div>
+          </div>
+          <div class="pv-view" id="pv-view"></div>
+          <div class="pv-scroll"><input id="pv-slider" type="range" min="0" max="100" value="0" step="1" aria-label="Desplazamiento" /></div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Rail derecha: anuncios persistentes -->
+    <aside class="ad-rail right" id="adRailRight" aria-label="Anuncios laterales derechos">
+      <div id="adRight" class="ad-slot" aria-live="polite">
+        Zona de anuncio (derecha)
+      </div>
+    </aside>
+  </div>
+
+  <!-- Scripts -->
+  <script>
+  (function() {
+    // ---------- CONFIGURACIÓN GLOBAL ----------
+    // Bandera del proveedor de anuncios: "adsense" (por defecto) o "ezoic".
+    const params = new URLSearchParams(location.search);
+    const adsProvider = params.get('ads') || 'adsense';
+    window.adsProvider = adsProvider;
+    // Bandera de layout A/B testing: control | testA | testB (opcional).
+    const layoutVariant = params.get('layout') || 'control';
+    window.layoutVariant = layoutVariant;
+
+    // Google Analytics 4 (placeholder). Sustituye G-XXXXXXXXXX con tu ID real.
+    (function loadGA(){
+      const GA_ID = 'G-XXXXXXXXXX';
+      if (!GA_ID) return;
+      const s1 = document.createElement('script');
+      s1.async = true;
+      s1.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID;
+      document.head.appendChild(s1);
+      const s2 = document.createElement('script');
+      s2.innerHTML = `window.dataLayer = window.dataLayer || [];\nfunction gtag(){dataLayer.push(arguments);}\n` +
+                    `gtag('js', new Date());\n` +
+                    `gtag('config', '${GA_ID}', { send_page_view: true });\n` +
+                    `gtag('consent','default',{ ad_storage:'denied', analytics_storage:'granted' });`;
+      document.head.appendChild(s2);
+    })();
+
+    // Consent Mode v2 placeholder. Aquí podrías integrar tu gestor de consentimiento.
+    // gtag('consent', 'update', { ad_storage: 'granted', analytics_storage: 'granted' });
+
+    // ---------- CARGA SEGURA DE PDF.js ----------
+    const PDFJS_SRC   = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.4.168/build/pdf.min.js';
+    const PDFJS_WORKER= 'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.4.168/build/pdf.worker.min.js';
+    let _pdfReadyPromise = null;
+    function ensurePDFJS() {
+      if (typeof window.pdfjsLib !== 'undefined') {
+        window.pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS_WORKER;
+        return Promise.resolve(window.pdfjsLib);
+      }
+      if (_pdfReadyPromise) return _pdfReadyPromise;
+      _pdfReadyPromise = new Promise((resolve) => {
+        const s = document.createElement('script');
+        s.src = PDFJS_SRC;
+        s.async = true;
+        s.onload = () => {
+          if (typeof window.pdfjsLib !== 'undefined') {
+            window.pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS_WORKER;
+            resolve(window.pdfjsLib);
+          } else {
+            resolve(null);
+          }
+        };
+        s.onerror = () => { resolve(null); };
+        document.head.appendChild(s);
+      });
+      return _pdfReadyPromise;
+    }
+
+    // ---------- ICONOS SVG ----------
+    const Icons = {
+      folder: '<svg width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="M10 4l2 2h8a2 2 0 0 1 2 2v1H2V6a2 2 0 0 1 2-2z"/><path fill="currentColor" d="M2 9h20v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2z"/></svg>',
+      file:   '<svg width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path fill="currentColor" d="M14 2v6h6"/></svg>',
+      pdf:    '<svg width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="M6 2h8l6 6v12a2 2 0 0 1-2 2H6z"/><text x="7" y="17" font-size="7" fill="#fff" font-family="Arial, sans-serif">PDF</text></svg>',
+      zip:    '<svg width="18" height="18" viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2" fill="currentColor"/><path fill="#fff" d="M10 5h4v2h-4V5m0 3h4v2h-4V8m0 3h4v2h-4v-2m0 3h4v2h-4v-2"/></svg>'
+    };
+
+    // ---------- DEMO DATASET (fallback) ----------
+    // Se utiliza sólo si index.json no puede cargarse.
+    const basicasMaterias = [
+      'Análisis Matemático I','Álgebra y Geometría Analítica','Física I','Química General','Sistemas de Representación','Ingeniería y Sociedad','Fundamentos de Informática','Análisis Matemático II','Física II','Probabilidad y Estadística','Inglés I'
+    ];
+    function materiaNodo(nombre) {
+      return { name: nombre, type: 'dir', children: [ { name: 'Parciales', type: 'dir', children: [] }, { name: 'Finales', type: 'dir', children: [] }, { name: 'Material de estudio', type: 'dir', children: [] } ] };
+    }
+    function materiasLista(nombres) { return nombres.map(materiaNodo); }
+    // Definición de años por carrera
+    const civil = { 1: ['Ingeniería Civil I'], 2: ['Estabilidad','Ingeniería Civil II','Tecnología de los Materiales'], 3: ['Resistencia de Materiales','Tecnología del Hormigón','Tecnología de la Construcción','Geotopografía','Hidráulica General y Aplicada','Instalaciones','Economía','Inglés II'] };
+    const mecanica = { 1: ['Ingeniería Mecánica I'], 2: ['Estabilidad I','Materiales Metálicos','Materiales No Metálicos','Ingeniería Mecánica II','Inglés Técnico I'], 3: ['Cálculo Avanzado','Diseño Mecánico','Estabilidad II','Mecánica Racional','Mediciones y Ensayos Industriales','Termodinámica','Ing. Ambiental y Seguridad Industrial','Inglés Técnico II'] };
+    const electrica = { 1: ['Integración Eléctrica I (Int)'], 2: ['Electrotecnia I','Mecánica Técnica','Integración Eléctrica II (Int)','Cálculo Numérico','Inglés I'], 3: ['Tecnologías y Ensayos de Materiales Eléctricos','Instrumentos y Mediciones Eléctricas','Teoría de los Campos','Física III','Máquinas Eléctricas I','Electrotecnia II','Termodinámica','Fundamentos para el Análisis de Señales'] };
+    const auto = { 1: ['Ingeniería en la Industria Automotriz I'] };
+    function anioNodo(n, materias) { return { name: String(n) + 'º año', type: 'dir', children: materiasLista(materias) }; }
+    function carreraNodo(nombre, años) {
+      const t = [ { year:1, list:años[1]||[] }, { year:2, list:años[2]||[] }, { year:3, list:años[3]||[] }, { year:4, list:años[4]||[] }, { year:5, list:años[5]||[] } ];
+      return { name:nombre, type:'dir', children: t.map(a => anioNodo(a.year, a.list)) };
+    }
+    // Construye dataset demo
+    const demoRoot = { name:'', type:'dir', children: [] };
+    (function buildDemo(){
+      demoRoot.children.push({ name:'Básicas', type:'dir', children: materiasLista(basicasMaterias) });
+      demoRoot.children.push(carreraNodo('Ingeniería Civil', civil));
+      demoRoot.children.push(carreraNodo('Ingeniería en Energía Eléctrica', electrica));
+      demoRoot.children.push(carreraNodo('Ingeniería en Industria Automotriz', auto));
+      demoRoot.children.push(carreraNodo('Ingeniería Mecánica', mecanica));
+      // Insertamos un archivo PDF de ejemplo en Física I/Parciales
+      function findNodeByPath(root, path) {
+        if (path === '/' || path === '') return root;
+        const parts = path.split('/').filter(Boolean);
+        let node = root;
+        for (const p of parts) {
+          if (!node || node.type !== 'dir' || !node.children) return null;
+          node = node.children.find(ch => ch.name === p);
+          if (!node) return null;
+        }
+        return node;
+      }
+      const pdfNode = findNodeByPath(demoRoot, '/Básicas/Física I/Parciales');
+      if (pdfNode) {
+        pdfNode.children.push({ name:'Parcial-25-06-23-_Hecho_.pdf', type:'file', ext:'pdf', date:'2025-06-23', url:'files/Parcial-25-06-23-_Hecho_.pdf' });
+      }
+      const imgNode = findNodeByPath(demoRoot, '/Básicas/Física II/Parciales');
+      if (imgNode) {
+        imgNode.children.push({ name:'Parcial 25-06-11 (Hecho).jpeg', type:'file', ext:'jpg', date:'2025-06-11', url:'files/parcial-demo.jpg' });
+      }
+    })();
+
+    // ---------- MANIFEST LOADING ----------
+    let datasetRoot = demoRoot; // se reemplazará cuando cargue index.json
+    fetch('index.json').then(r => r.ok ? r.json() : Promise.reject()).then(data => {
+      if (data && typeof data === 'object') {
+        datasetRoot = data;
+      }
+    }).catch(() => {
+      console.warn('No se pudo cargar index.json, se usará dataset demo.');
+    }).finally(() => {
+      // Sincronizar navegación inicial después de definir datasetRoot
+      syncFromHash();
+    });
+
+    // ---------- UTILIDADES ----------
+    function fmtDate(iso) {
+      if (!iso) return '—';
+      try {
+        const d = new Date(iso + (iso.length === 10 ? 'T00:00:00' : ''));
+        return d.toLocaleDateString('es-AR', { year:'numeric', month:'short', day:'2-digit' });
+      } catch (err) {
+        return '—';
+      }
+    }
+    function getPathFromHash() {
+      const raw = decodeURIComponent(location.hash.replace(/^#/, ''));
+      return raw.startsWith('/') ? raw : ('/' + raw);
+    }
+    function setPathToHash(path) { location.hash = encodeURIComponent(path); }
+    function findNodeByPath(root, path) {
+      if (path === '/' || path === '') return root;
+      const parts = path.split('/').filter(Boolean);
+      let node = root;
+      for (const p of parts) {
+        if (!node || node.type !== 'dir' || !node.children) return null;
+        node = node.children.find(ch => ch.name === p);
+        if (!node) return null;
+      }
+      return node;
+    }
+    function iconFor(item) {
+      if (item.type === 'dir') return Icons.folder;
+      const e = (item.ext || '').toLowerCase();
+      if (e === 'pdf') return Icons.pdf;
+      if (e === 'zip') return Icons.zip;
+      return Icons.file;
+    }
+    function sortItems(items, how) {
+      const arr = items.slice();
+      arr.sort((a,b) => {
+        // Carpetas siempre primero
+        if (a.type !== b.type) return a.type === 'dir' ? -1 : 1;
+        if (how === 'date') {
+          const da = a.date ? Date.parse(a.date) : 0;
+          const db = b.date ? Date.parse(b.date) : 0;
+          return db - da;
+        }
+        return a.name.localeCompare(b.name, 'es');
+      });
+      return arr;
+    }
+
+    // ---------- ELEMENTOS DEL DOM ----------
+    const rowsEl = document.getElementById('rows');
+    const emptyEl = document.getElementById('empty');
+    const bcEl = document.getElementById('breadcrumbs');
+    const qEl = document.getElementById('q');
+    const sortEl = document.getElementById('sortBy');
+    const upBtn = document.getElementById('goUp');
+    const themeToggle = document.getElementById('themeToggle');
+    const overlay = document.getElementById('preview');
+    const pvView = document.getElementById('pv-view');
+    const pvTitle = document.getElementById('pv-title');
+    const pvClose = document.getElementById('pv-close');
+    const pvZoomIn = document.getElementById('pv-zoom-in');
+    const pvZoomOut = document.getElementById('pv-zoom-out');
+    const pvSlider = document.getElementById('pv-slider');
+    const adLeftEl = document.getElementById('adLeft');
+    const adRightEl = document.getElementById('adRight');
+
+    // ---------- TEMA ----------
+    function applyTheme(t) {
+      document.body.classList.toggle('light', t === 'light');
+    }
+    applyTheme(localStorage.getItem('theme') || 'dark');
+    themeToggle.addEventListener('click', () => {
+      const now = document.body.classList.contains('light') ? 'dark' : 'light';
+      localStorage.setItem('theme', now);
+      applyTheme(now);
+    });
+
+    // ---------- NAVEGACIÓN Y LISTADO ----------
+    let currentPath = '/';
+    let currentNode = datasetRoot;
+    function renderBreadcrumbs(path) {
+      bcEl.innerHTML = '';
+      const frag = document.createDocumentFragment();
+      const add = (label, to) => {
+        const a = document.createElement('a');
+        a.href = 'javascript:void(0)';
+        a.textContent = label || 'Inicio';
+        a.addEventListener('click', () => setPathToHash(to));
+        a.setAttribute('role','link');
+        frag.appendChild(a);
+      };
+      const parts = path.split('/').filter(Boolean);
+      let acc = '/';
+      add('Inicio','/');
+      for (let i = 0; i < parts.length; i++) {
+        const s = document.createElement('span'); s.className = 'sep'; s.textContent = '/'; frag.appendChild(s);
+        acc += (acc.endsWith('/') ? '' : '/') + parts[i];
+        add(parts[i], acc);
+      }
+      bcEl.appendChild(frag);
+    }
+    function renderList(node) {
+      const q = (qEl.value || '').trim().toLowerCase();
+      const sort = sortEl.value;
+      let items = (node.children || []).filter(Boolean);
+      if (q) items = items.filter(it => it.name.toLowerCase().includes(q));
+      items = sortItems(items, sort);
+      rowsEl.innerHTML = '';
+      if (!items.length) {
+        emptyEl.hidden = false;
+        return;
+      } else {
+        emptyEl.hidden = true;
+      }
+      for (const it of items) {
+        const tr = document.createElement('tr');
+        const nameTd = document.createElement('td');
+        const link = document.createElement('a');
+        link.className = 'row';
+        link.href = 'javascript:void(0)';
+        link.innerHTML = `${iconFor(it)} <span>${it.name}</span>`;
+        link.addEventListener('click', () => {
+          if (it.type === 'dir') {
+            const next = (currentPath === '/' ? '' : currentPath) + '/' + it.name;
+            setPathToHash(next);
+            // GA evento: navegar carpeta
+            if (typeof gtag === 'function') {
+              gtag('event','navigate', { 'event_category':'navigation', 'event_label': next });
+            }
+          } else {
+            openPreview((currentPath === '/' ? '' : currentPath) + '/' + it.name, it);
+          }
+        });
+        const wrap = document.createElement('div'); wrap.className = 'nameCell'; wrap.appendChild(link);
+        nameTd.appendChild(wrap);
+        const typeTd = document.createElement('td'); typeTd.className = 'hide-sm';
+        const badge = document.createElement('span'); badge.className = 'type-badge'; badge.textContent = it.type === 'dir' ? 'Carpeta' : (it.ext ? it.ext.toUpperCase() : 'Archivo');
+        typeTd.appendChild(badge);
+        const dateTd = document.createElement('td'); dateTd.className = 'hide-sm'; dateTd.textContent = fmtDate(it.date);
+        tr.appendChild(nameTd);
+        tr.appendChild(typeTd);
+        tr.appendChild(dateTd);
+        rowsEl.appendChild(tr);
+      }
+    }
+    function goUp() {
+      if (currentPath === '/' || currentPath === '') return;
+      const parts = currentPath.split('/').filter(Boolean);
+      parts.pop();
+      const up = '/' + parts.join('/');
+      setPathToHash(up || '/');
+    }
+
+    // ---------- PREVIEW ----------
+    let zoom = 1;
+    let previewFilePath = null;
+    let totalHeight = 1; // para slider
+    function resetPreview() {
+      pvView.innerHTML = '';
+      zoom = 1;
+      pvSlider.value = 0;
+      totalHeight = 1;
+    }
+    function showOverlay() { overlay.style.display = 'flex'; }
+    function hideOverlay() { overlay.style.display = 'none'; }
+    async function openPreview(path, node) {
+      resetPreview();
+      previewFilePath = path;
+      pvTitle.textContent = node?.name || path.split('/').pop();
+      showOverlay();
+      const ext = (node?.ext || path.split('.').pop() || '').toLowerCase();
+      // GA evento: abrir archivo
+      if (typeof gtag === 'function') {
+        gtag('event','file_open', { 'event_category':'file', 'event_label': path, 'file_type': ext });
+      }
+      // Determina URL final: usa url definido en manifest si existe
+      const finalUrl = node && node.url ? node.url : ('.' + path);
+      if ([ 'jpg','jpeg','png','webp','gif' ].includes(ext)) {
+        const img = document.createElement('img');
+        img.className = 'pv-img';
+        img.alt = node?.name || 'Imagen';
+        img.src = finalUrl;
+        pvView.appendChild(img);
+        updateSliderTarget();
+        return;
+      }
+      if (ext === 'pdf') {
+        await renderPDF(finalUrl);
+        return;
+      }
+      // Tipo no soportado
+      const p = document.createElement('p');
+      p.style.color = 'var(--muted)';
+      p.style.padding = '56px 16px';
+      p.textContent = 'Tipo de archivo no soportado en el visor.';
+      pvView.appendChild(p);
+    }
+    async function renderPDF(url) {
+      const pdfjs = await ensurePDFJS();
+      if (pdfjs) {
+        try {
+          const loading = pdfjs.getDocument(url);
+          const pdf = await loading.promise;
+          for (let p = 1; p <= pdf.numPages; p++) {
+            const page = await pdf.getPage(p);
+            const viewport = page.getViewport({ scale: zoom });
+            const canvas = document.createElement('canvas');
+            canvas.className = 'pv-canvas';
+            const ctx = canvas.getContext('2d');
+            canvas.width = viewport.width;
+            canvas.height = viewport.height;
+            await page.render({ canvasContext: ctx, viewport }).promise;
+            pvView.appendChild(canvas);
+          }
+          updateSliderTarget();
+        } catch (err) {
+          console.error('Error al renderizar PDF:', err);
+          renderPDFNative(url);
+        }
+      } else {
+        renderPDFNative(url);
+      }
+    }
+    function renderPDFNative(url) {
+      const ifr = document.createElement('iframe');
+      ifr.className = 'pv-iframe';
+      ifr.src = makePDFUrlWithZoom(url, zoom);
+      pvView.appendChild(ifr);
+      updateSliderTarget();
+    }
+    function makePDFUrlWithZoom(url, z) {
+      const pct = Math.round(z * 100);
+      const [ base, hash ] = url.split('#');
+      const params = new URLSearchParams(hash || '');
+      params.set('zoom', String(pct));
+      return base + '#' + params.toString();
+    }
+    function rerenderIfPDF() {
+      // Si hay canvas => PDF.js; si hay iframe => nativo
+      const isPDFJS = pvView.querySelector('canvas');
+      const isNative = pvView.querySelector('iframe.pv-iframe');
+      if (isPDFJS) {
+        const url = previewFilePath && (currentNode ? ('.' + previewFilePath) : previewFilePath);
+        pvView.innerHTML = '';
+        renderPDF(url);
+        return;
+      }
+      if (isNative) {
+        const ifr = pvView.querySelector('iframe.pv-iframe');
+        if (ifr && previewFilePath) {
+          ifr.src = makePDFUrlWithZoom(previewFilePath, zoom);
+        }
+      }
+    }
+    function updateSliderTarget() {
+      const maxScroll = Math.max(0, pvView.scrollHeight - pvView.clientHeight);
+      totalHeight = maxScroll || 1;
+      pvSlider.value = Math.round((pvView.scrollTop / totalHeight) * 100);
+    }
+    // Controles de la barra del visor
+    pvClose.addEventListener('click', () => { hideOverlay(); });
+    pvZoomIn.addEventListener('click', () => {
+      zoom = Math.min(3, zoom + 0.1);
+      rerenderIfPDF();
+      updateSliderTarget();
+      if (typeof gtag === 'function') gtag('event','zoom_in',{ 'event_category':'interaction' });
+    });
+    pvZoomOut.addEventListener('click', () => {
+      zoom = Math.max(0.5, zoom - 0.1);
+      rerenderIfPDF();
+      updateSliderTarget();
+      if (typeof gtag === 'function') gtag('event','zoom_out',{ 'event_category':'interaction' });
+    });
+    pvSlider.addEventListener('input', () => {
+      const pct = Number(pvSlider.value) / 100;
+      pvView.scrollTop = pct * totalHeight;
+    });
+    pvView.addEventListener('scroll', updateSliderTarget);
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') hideOverlay();
+    });
+
+    // ---------- SYNC HASH ----------
+    async function syncFromHash() {
+      const raw = decodeURIComponent(location.hash.replace(/^#/,''));
+      if (raw.startsWith('/preview?file=')) {
+        const fp = raw.replace('/preview?file=','');
+        const name = fp.split('/').pop();
+        const ext = (name.split('.').pop() || '').toLowerCase();
+        openPreview(fp, { name, type:'file', ext });
+        return;
+      }
+      hideOverlay();
+      const path = raw.startsWith('/') ? raw : ('/' + raw);
+      currentPath = path || '/';
+      renderBreadcrumbs(currentPath);
+      currentNode = findNodeByPath(datasetRoot, currentPath) || datasetRoot;
+      renderList(currentNode);
+    }
+
+    // ----------- EVENTOS ----------
+    window.addEventListener('hashchange', syncFromHash);
+    qEl.addEventListener('input', () => renderList(currentNode));
+    sortEl.addEventListener('change', () => renderList(currentNode));
+    upBtn.addEventListener('click', goUp);
+
+    // Inicializa navegación si no hay hash
+    if (!location.hash) setPathToHash('/');
+
+    // ----------- ANUNCIOS ----------
+    function initAds() {
+      // Inserta bloques dependiendo del proveedor
+      if (adsProvider === 'adsense') {
+        // Carga el script de Adsense de forma diferida
+        const script = document.createElement('script');
+        script.async = true;
+        script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=UA-REPLACE';
+        script.crossOrigin = 'anonymous';
+        document.head.appendChild(script);
+        // Configura bloques
+        [ adLeftEl, adRightEl ].forEach((slotEl, idx) => {
+          slotEl.innerHTML = '';
+          const ins = document.createElement('ins');
+          ins.className = 'adsbygoogle';
+          ins.style.display = 'block';
+          ins.setAttribute('data-ad-client','UA-REPLACE');
+          ins.setAttribute('data-ad-slot', idx === 0 ? 'SLOT-LEFT' : 'SLOT-RIGHT');
+          ins.setAttribute('data-ad-format','auto');
+          ins.setAttribute('data-full-width-responsive','true');
+          slotEl.appendChild(ins);
+          // Lazy load con IntersectionObserver
+          const observer = new IntersectionObserver((entries, obs) => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) {}
+                obs.unobserve(entry.target);
+              }
+            });
+          }, { rootMargin:'200px' });
+          observer.observe(ins);
+        });
+      } else if (adsProvider === 'ezoic') {
+        // Ezoic utiliza un script único y contenedores data-ez-slot. Aquí se muestran placeholders.
+        const script = document.createElement('script');
+        script.src = 'https://g.ezoic.net/ezoic/ezoic.js';
+        script.async = true;
+        script.setAttribute('data-ez-gaid','UA-REPLACE'); // GA property para Ezoic
+        document.head.appendChild(script);
+        [ adLeftEl, adRightEl ].forEach((slotEl, idx) => {
+          slotEl.innerHTML = '';
+          const div = document.createElement('div');
+          div.className = 'ezoic-ad';
+          div.style.minHeight = '600px';
+          div.setAttribute('data-ez-slot', idx === 0 ? 'left_rail' : 'right_rail');
+          div.textContent = 'Bloque de anuncio Ezoic';
+          slotEl.appendChild(div);
+        });
+      } else {
+        // Sin anuncios
+        [ adLeftEl, adRightEl ].forEach(slotEl => {
+          slotEl.textContent = 'Anuncios desactivados';
+        });
+      }
+    }
+    initAds();
+
+    // ----------- MEDICIONES RÁPIDAS DE RENDIMIENTO -----------
+    // Estas marcas son aproximadas y se registran en consola. LCP y CLS requieren herramientas externas para precisión.
+    window.addEventListener('load', () => {
+      const lcpEntries = performance.getEntriesByType('paint').filter(e => e.name === 'first-contentful-paint');
+      if (lcpEntries.length) {
+        console.log('FCP:', lcpEntries[0].startTime.toFixed(0), 'ms');
+      }
+      // Marcas custom de LCP/LargestElement puede medirse con PerformanceObserver, simplificado aquí
+      const observer = new PerformanceObserver((list) => {
+        for (const entry of list.getEntries()) {
+          if (entry.entryType === 'largest-contentful-paint') {
+            console.log('LCP:', entry.startTime.toFixed(0), 'ms');
+            observer.disconnect();
+            break;
+          }
+        }
+      });
+      try {
+        observer.observe({ type:'largest-contentful-paint', buffered:true });
+      } catch(err) {}
+    });
+
+    // ----------- SELF-TESTS -----------
+    (function runSelfTests(){
+      try {
+        console.group('FRGP self-tests');
+        // Verifica carga de manifest
+        console.assert(Array.isArray(datasetRoot.children), 'Manifest cargado correctamente');
+        // Ordenación A→Z y por fecha
+        const tmp = [ { name:'b', type:'file' }, { name:'a', type:'dir' } ];
+        const sorted = sortItems(tmp,'name');
+        console.assert(sorted[0].type === 'dir', 'Carpetas primero en sort');
+        const sortedDate = sortItems([ { name:'a', type:'file', date:'2020-01-01' }, { name:'b', type:'file', date:'2024-01-01' } ], 'date');
+        console.assert(sortedDate[0].date === '2024-01-01', 'Orden por fecha (reciente primero)');
+        // Detección de PDF vs imagen
+        console.assert(iconFor({ type:'file', ext:'pdf' }).includes('PDF'), 'Icono PDF detectado');
+        console.assert(iconFor({ type:'file', ext:'jpg' }).includes('<svg'), 'Icono archivo genérico detectado');
+        // PDF.js fallback
+        ensurePDFJS().then((lib) => {
+          console.log(lib ? 'PDF.js cargado' : 'PDF.js no disponible: usando visor nativo');
+        });
+        // Verificación de que los ads rails mantienen layout
+        const leftRect = adLeftEl.getBoundingClientRect();
+        const rightRect = adRightEl.getBoundingClientRect();
+        console.assert(leftRect.width > 0 && rightRect.width > 0, 'Rails de anuncios reservan espacio');
+        console.groupEnd();
+      } catch(err) {
+        console.error('Self-tests error:', err);
+      }
+    })();
+
+  })();
+  </script>
+</body>
+</html>
