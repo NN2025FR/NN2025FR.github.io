@@ -394,7 +394,18 @@
   <!-- Scripts -->
   <script>
   (function() {
-    // ---------- CONFIGURACIÓN GLOBAL ----------
+    const USE_FLAT_FILES = true;               // <<< deja true para evitar subcarpetas
+    const FILES_BASE = "./files/";             // carpeta única donde subís tus PDFs
+    // Helper: resuelve la URL del archivo según el modo y el nodo del manifest
+    function resolveFileUrl(node, manifestPath) {
+      if (USE_FLAT_FILES) {
+    // Si el nodo trae "file", usamos ./files/<file>; si trae "url", usamos esa URL absoluta
+      if (node.url) return node.url;
+      if (node.file) return FILES_BASE + encodeURIComponent(node.file);
+    }
+    // Modo clásico (carpetas reales): usa la ruta virtual del manifest
+    return "." + manifestPath;
+    }
     // Bandera del proveedor de anuncios: "adsense" (por defecto) o "ezoic".
     const params = new URLSearchParams(location.search);
     const adsProvider = params.get('ads') || 'adsense';
@@ -650,7 +661,8 @@
               gtag('event','navigate', { 'event_category':'navigation', 'event_label': next });
             }
           } else {
-            openPreview((currentPath === '/' ? '' : currentPath) + '/' + it.name, it);
+          const manifestPath = (currentPath === '/' ? '' : currentPath) + '/' + it.name; 
+          openPreview(manifestPath, it);
           }
         });
         const wrap = document.createElement('div'); wrap.className = 'nameCell'; wrap.appendChild(link);
@@ -701,13 +713,13 @@
         const img = document.createElement('img');
         img.className = 'pv-img';
         img.alt = node?.name || 'Imagen';
-        img.src = finalUrl;
+        img.src = resolveFileUrl(node, path);
         pvView.appendChild(img);
         updateSliderTarget();
         return;
       }
       if (ext === 'pdf') {
-        await renderPDF(finalUrl);
+        await renderPDF(resolveFileUrl(node, path));
         return;
       }
       // Tipo no soportado
