@@ -1,213 +1,370 @@
 <!doctype html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Biblioteca de FRGP</title>
-  <meta name="description" content="Archivos de UTN Pacheco — Parciales, Finales y Material de estudio" />
-  <style>
-    :root { --bg:#0b0d10; --panel:#12151a; --text:#e6e8eb; --muted:#9aa3ad; --accent:#4ea1ff; --border:#1f242c; --hover:#151a21; --link:#a6d1ff; --shadow:0 10px 30px rgba(0,0,0,.35) }
-    .light { --bg:#f6f8fb; --panel:#fff; --text:#101418; --muted:#5b6876; --accent:#0e63ff; --border:#e6eaf0; --hover:#f2f5f9; --link:#0e63ff; --shadow:0 8px 20px rgba(0,0,0,.08) }
-    *{box-sizing:border-box} html,body{height:100%} body{margin:0;font:14px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;background:var(--bg);color:var(--text)}
-    a{color:var(--link);text-decoration:none}
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Biblioteca de FRGP</title>
+<meta name="description" content="Archivos de UTN Pacheco — Parciales, Finales y Material de estudio" />
+<style>
+  :root {--bg:#0b0d10;--panel:#12151a;--text:#e6e8eb;--muted:#9aa3ad;--accent:#4ea1ff;--border:#1f242c;--hover:#151a21;--link:#a6d1ff;--shadow:0 10px 30px rgba(0,0,0,.35)}
+  .light {--bg:#f6f8fb;--panel:#fff;--text:#101418;--muted:#5b6876;--accent:#0e63ff;--border:#e6eaf0;--hover:#f2f5f9;--link:#0e63ff;--shadow:0 8px 20px rgba(0,0,0,.08)}
+  *{box-sizing:border-box} html,body{height:100%} body{margin:0;font:14px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;background:var(--bg);color:var(--text)} a{color:var(--link);text-decoration:none}
 
-    .grid{display:grid;grid-template-columns:180px minmax(0,1fr) 180px;min-height:100vh} /* rails más cerca del contenido */
-    .ad-rail{background:var(--panel);border-right:1px solid var(--border);border-left:1px solid var(--border);display:flex;align-items:flex-start;justify-content:center;padding:8px}
-    .ad-slot{width:95%;min-height:100px;border:1px dashed var(--border);border-radius:12px;padding:8px;color:var(--muted);font-size:12px;text-align:center;display:flex;align-items:center;justify-content:center}
+  /* Layout general con rails de anuncios persistentes */
+  .grid {display:grid;grid-template-columns:36px minmax(0,1fr) 36px;min-height:100vh}
+  .ad-rail{background:var(--panel);border-right:1px solid var(--border);border-left:1px solid var(--border);display:flex;align-items:flex-start;justify-content:center;padding:12px}
+  .ad-slot{width:100%;min-height:100px;border:1px dashed var(--border);border-radius:12px;padding:12px;color:var(--muted);font-size:12px;text-align:center}
 
-    #center{position:relative}
-    .wrap{max-width:1100px;margin:0 auto;padding:24px 16px 48px}
-    header.site{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;margin-bottom:16px}
-    .title{display:flex;gap:12px;align-items:baseline}
-    .title h1{margin:0;font-size:22px;letter-spacing:.2px}
-    .title .sub{color:var(--muted);font-size:13px}
-    .actions{display:flex;gap:8px;align-items:center}
-    button,select,input[type="search"]{background:var(--panel);color:var(--text);border:1px solid var(--border);padding:10px 12px;border-radius:10px;box-shadow:var(--shadow)}
-    button:hover,select:hover,input[type="search"]:hover{background:var(--hover)} button{cursor:pointer}
-    nav.breadcrumbs{font-size:13px;color:var(--muted);display:flex;gap:6px;align-items:center;margin:10px 0 6px;flex-wrap:wrap}
-    nav.breadcrumbs .sep{opacity:.4}
-    .toolbar{display:grid;grid-template-columns:1fr auto auto;gap:10px;margin:8px 0 16px}
-    .toolbar .search{position:relative}
-    .toolbar .search input{width:100%;padding-left:40px}
-    .toolbar .search svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);pointer-events:none;opacity:.7}
-    .panel{background:var(--panel);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);overflow:clip}
-    .list{width:100%;border-collapse:collapse}
-    .list thead{background:var(--hover)}
-    .list th,.list td{padding:12px 14px;border-bottom:1px solid var(--border);text-align:left;vertical-align:middle}
-    .list th{font-weight:600;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.4px}
-    .row{color:var(--text);display:flex;align-items:center;gap:10px}
-    .nameCell{display:flex;align-items:center;gap:10px}
-    .type-badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:999px;border:1px solid var(--border);color:var(--muted)}
-    .empty{padding:18px 14px;color:var(--muted)}
-    .contrib{padding:12px 14px;color:var(--muted);font-size:13px;border-top:1px dashed var(--border);background:var(--panel)}
+  /* Centro (contenido) */
+  #center{position:relative}
+  .wrap{max-width:1100px;margin:0 auto;padding:24px 16px 64px}
+  header.site{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;margin-bottom:16px}
+  .title{display:flex;gap:12px;align-items:baseline}
+  .title h1{margin:0;font-size:22px;letter-spacing:.2px}
+  .title .sub{color:var(--muted);font-size:13px}
+  .actions{display:flex;gap:8px;align-items:center}
+  button,select,input[type="search"]{background:var(--panel);color:var(--text);border:1px solid var(--border);padding:10px 12px;border-radius:10px;box-shadow:var(--shadow)}
+  button:hover,select:hover,input[type="search"]:hover{background:var(--hover)} button{cursor:pointer}
+  nav.breadcrumbs{font-size:13px;color:var(--muted);display:flex;gap:6px;align-items:center;margin:10px 0 6px;flex-wrap:wrap}
+  nav.breadcrumbs .sep{opacity:.4}
+  .toolbar{display:grid;grid-template-columns:1fr auto auto;gap:10px;margin:8px 0 16px}
+  .toolbar .search{position:relative}
+  .toolbar .search input{width:100%;padding-left:40px}
+  .toolbar .search svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);pointer-events:none;opacity:.7}
+  .panel{background:var(--panel);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);overflow:clip}
+  .list{width:100%;border-collapse:collapse}
+  .list thead{background:var(--hover)}
+  .list th,.list td{padding:12px 14px;border-bottom:1px solid var(--border);text-align:left;vertical-align:middle}
+  .list th{font-weight:600;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.4px}
+  .row{color:var(--text);display:flex;align-items:center;gap:10px}
+  .row:hover{text-decoration:underline}
+  .nameCell{display:flex;align-items:center;gap:10px}
+  .type-badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:999px;border:1px solid var(--border);color:var(--muted)}
+  .empty{padding:18px 14px;color:var(--muted)}
 
-    .list tr:hover{background:var(--hover)}
-    @media (prefers-reduced-motion:no-preference){.list tr{transition:background .15s ease,transform .15s ease,box-shadow .15s ease}.list tr:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.2)}}
+  /* PREVIEW dentro del ancho del contenido (sólo cubre el área central) */
+  .preview-overlay{position:fixed;inset:0;display:none;align-items:flex-start;justify-content:center;background:rgba(0,0,0,.4);backdrop-filter:saturate(120%) blur(1px);z-index:40}
+  .preview-card{margin-top:24px;width:min(1100px, calc(100% - 64px));max-height:calc(100vh - 48px);background:var(--panel);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);position:relative;display:grid;grid-template-columns:1fr 12px}
+  .pv-toolbar{position:absolute;left:0;top:0;right:12px;height:44px;display:flex;align-items:center;gap:8px;padding:6px 8px;border-bottom:1px solid var(--border);background:var(--panel);border-top-left-radius:14px}
+  .pv-btn{padding:8px 10px;border-radius:10px;border:1px solid var(--border);background:var(--hover)}
+  .pv-title{margin-left:6px;color:var(--muted);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .pv-close{font-weight:700}
+  .pv-view{overflow:auto;scroll-behavior:smooth;border-top-left-radius:14px;border-bottom-left-radius:14px}
+  .pv-scroll{grid-column:2/3;grid-row:1/3;background:var(--hover);border-left:1px solid var(--border);border-top-right-radius:14px;border-bottom-right-radius:14px;display:flex;align-items:center;justify-content:center}
+  .pv-scroll input[type=range]{writing-mode:bt-lr;-webkit-appearance:slider-vertical;height:80%;width:10px;background:transparent}
+  .pv-canvas{display:block;margin:52px auto 16px; /* deja espacio para toolbar */}
+  .pv-img{display:block;margin:52px auto 16px;max-width:calc(100% - 24px)}
+  .pv-iframe{display:block;width:100%;height:calc(100vh - 96px);border:0;background:#fff;margin-top:52px}
 
-    /* PREVIEW: ahora fixed + scroll lock en body */
-    .preview-overlay{position:fixed;inset:0;display:none;align-items:flex-start;justify-content:center;background:rgba(0,0,0,.5);backdrop-filter:saturate(120%) blur(1px);z-index:1000}
-    .preview-card{margin-top:24px;width:min(1100px,calc(100% - 64px));max-height:calc(100vh - 48px);background:var(--panel);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);position:relative;display:grid;grid-template-columns:1fr 12px}
-    .pv-toolbar{position:absolute;left:0;top:0;right:12px;height:44px;display:flex;align-items:center;gap:8px;padding:6px 8px;border-bottom:1px solid var(--border);background:var(--panel);border-top-left-radius:14px}
-    .pv-btn{padding:8px 10px;border-radius:10px;border:1px solid var(--border);background:var(--hover);color:var(--text);cursor:pointer}
-    .pv-title{margin-left:6px;color:var(--muted);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .pv-close{font-weight:700}
-    .pv-view{overflow:auto;scroll-behavior:smooth;border-top-left-radius:14px;border-bottom-left-radius:14px;min-height:200px}
-    .pv-scroll{grid-column:2/3;grid-row:1/3;background:var(--hover);border-left:1px solid var(--border);border-top-right-radius:14px;border-bottom-right-radius:14px;display:flex;align-items:center;justify-content:center}
-    .pv-scroll input[type=range]{writing-mode:bt-lr;-webkit-appearance:slider-vertical;height:80%;width:10px;background:transparent}
-    .pv-canvas{display:block;margin:52px auto 16px}
-    .pv-img{display:block;margin:52px auto 16px;max-width:calc(100% - 24px)}
-    .pv-iframe{display:block;width:100%;height:calc(100vh - 96px);border:0;background:#fff;margin-top:52px}
-
-    @media (max-width:1024px){.grid{grid-template-columns:1fr}.ad-rail{order:2}.ad-slot{min-height:100px}}
-  </style>
+  @media (max-width:1024px){
+    .grid{grid-template-columns:1fr} .ad-rail{order:2} .ad-slot{min-height:120px}
+  }
+  .no-scroll{overflow:hidden}
+  .contrib-note{color:var(--muted);font-size:12px;margin:8px 4px 0}
+</style>
 </head>
 <body>
   <div class="grid">
-    <aside class="ad-rail left"><div class="ad-slot">Zona de anuncio (izquierda)</div></aside>
+    <aside class="ad-rail left">
+      <div class="ad-slot">
+        <!-- AdSense izquierda persistente. Reemplazar con tu bloque real. -->
+        Zona de anuncio (izquierda)
+      </div>
+    </aside>
 
     <main id="center">
       <div class="wrap" id="list-shell">
         <header class="site">
-          <div class="title"><h1>Biblioteca de FRGP</h1><span class="sub">Archivos de UTN Pacheco</span></div>
-          <div class="actions"><button id="themeToggle" title="Cambiar tema">🌓 Modo</button></div>
+          <div class="title">
+            <h1>Biblioteca de FRGP</h1>
+            <span class="sub">Archivos de UTN Pacheco</span>
+          </div>
+          <div class="actions">
+            <button id="themeToggle" title="Cambiar tema">🌓 Modo</button>
+          </div>
         </header>
 
-        <nav class="breadcrumbs" id="breadcrumbs" aria-label="Migas de pan"></nav>
+        <nav class="breadcrumbs" id="breadcrumbs"></nav>
 
         <div class="toolbar">
           <div class="search">
             <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M10 4a6 6 0 0 1 4.472 9.994l4.267 4.267l-1.414 1.414l-4.267-4.267A6 6 0 1 1 10 4m0 2a4 4 0 1 0 0 8a4 4 0 0 0 0-8"/></svg>
             <input id="q" type="search" placeholder="Buscar por nombre…" autocomplete="off" />
           </div>
-          <select id="sortBy" aria-label="Ordenar por"><option value="name">Ordenar: Nombre (A→Z)</option><option value="date">Ordenar: Fecha (reciente primero)</option></select>
+          <select id="sortBy" aria-label="Ordenar por">
+            <option value="name">Ordenar: Nombre (A→Z)</option>
+            <option value="date">Ordenar: Fecha (reciente primero)</option>
+          </select>
           <button id="goUp" title="Subir nivel">⬆️ Subir</button>
         </div>
 
         <div class="panel">
-          <table class="list" role="grid" aria-label="Listado">
-            <thead><tr><th>Nombre</th><th class="hide-sm">Tipo</th><th class="hide-sm">Fecha</th></tr></thead>
+          <table class="list" role="grid" aria-label="Listado de elementos">
+            <thead>
+              <tr><th>Nombre</th><th class="hide-sm">Tipo</th><th class="hide-sm">Fecha</th></tr>
+            </thead>
             <tbody id="rows"></tbody>
           </table>
           <div class="empty" id="empty" hidden>No hay elementos que coincidan.</div>
-          <div class="contrib" id="contrib" hidden></div>
+          <div id="contrib-note" class="contrib-note">Si tenés algún parcial, final o material mandalo a este mail: <a id="contrib-mail" href="#">examenes@tu-dominio.com</a></div>
         </div>
       </div>
 
-      <div class="preview-overlay" id="preview" role="dialog" aria-modal="true">
+      <!-- Overlay de PREVIEW (mismo ancho que .wrap) -->
+      <div class="preview-overlay" id="preview">
         <div class="preview-card">
           <div class="pv-toolbar">
-            <button class="pv-btn pv-close" id="pv-close" aria-label="Cerrar">✕</button>
+            <button class="pv-btn pv-close" id="pv-close">✕</button>
             <div class="pv-title" id="pv-title"></div>
           </div>
           <div class="pv-view" id="pv-view"></div>
-          <div class="pv-scroll"><input id="pv-slider" type="range" min="0" max="100" value="0" step="1" aria-label="Desplazamiento" /></div>
+          <div class="pv-scroll"><input id="pv-slider" type="range" min="0" max="100" value="0" step="1" /></div>
         </div>
       </div>
     </main>
 
-    <aside class="ad-rail right"><div class="ad-slot">Zona de anuncio (derecha)</div></aside>
+    <aside class="ad-rail right">
+      <div class="ad-slot">
+        <!-- AdSense derecha persistente. Reemplazar con tu bloque real. -->
+        Zona de anuncio (derecha)
+      </div>
+    </aside>
   </div>
 
 <script>
 (function(){
-  const CONTACT_EMAIL = "tucorreo@ejemplo.com"; // <<< cambiá este mail
-  const USE_FLAT_FILES = true;
-  const FILES_BASE = "./files/";
-  function resolveFileUrl(node, manifestPath){ if(USE_FLAT_FILES){ if(node?.url) return node.url; if(node?.file) return FILES_BASE + encodeURIComponent(node.file);} return "."+manifestPath; }
+  const CONTACT_EMAIL='examenes@tu-dominio.com';
+  // ---------- CARGA SEGURA DE PDF.js (con fallback nativo si CDN falla) ----------
+  const PDFJS_SRC = "https://cdn.jsdelivr.net/npm/pdfjs-dist@4.4.168/build/pdf.min.js";
+  const PDFJS_WORKER = "https://cdn.jsdelivr.net/npm/pdfjs-dist@4.4.168/build/pdf.worker.min.js";
+  let _pdfReadyPromise = null;
+  function ensurePDFJS(){
+    if (typeof window.pdfjsLib !== 'undefined') {
+      window.pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS_WORKER;
+      return Promise.resolve(window.pdfjsLib);
+    }
+    if (_pdfReadyPromise) return _pdfReadyPromise;
+    _pdfReadyPromise = new Promise((resolve)=>{
+      const s = document.createElement('script');
+      s.src = PDFJS_SRC; s.async = true;
+      s.onload = ()=>{
+        if (typeof window.pdfjsLib !== 'undefined') {
+          window.pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS_WORKER;
+          resolve(window.pdfjsLib);
+        } else {
+          // CDN cargó pero no expuso objeto: resolvemos null para fallback
+          resolve(null);
+        }
+      };
+      s.onerror = ()=>{
+        // No reventamos la app: resolvemos null y usamos visor nativo
+        resolve(null);
+      };
+      document.head.appendChild(s);
+    });
+    return _pdfReadyPromise;
+  }
 
-  // PDF.js load
-  const PDFJS_SRC="https://cdn.jsdelivr.net/npm/pdfjs-dist@4.4.168/build/pdf.min.js";
-  const PDFJS_WORKER="https://cdn.jsdelivr.net/npm/pdfjs-dist@4.4.168/build/pdf.worker.min.js";
-  let _pdfReadyPromise=null;
-  function ensurePDFJS(){ if(window.pdfjsLib){ window.pdfjsLib.GlobalWorkerOptions.workerSrc=PDFJS_WORKER; return Promise.resolve(window.pdfjsLib);} if(_pdfReadyPromise) return _pdfReadyPromise; return _pdfReadyPromise=new Promise(res=>{ const s=document.createElement('script'); s.src=PDFJS_SRC; s.async=true; s.onload=()=>{ if(window.pdfjsLib){ window.pdfjsLib.GlobalWorkerOptions.workerSrc=PDFJS_WORKER; res(window.pdfjsLib);} else res(null);}; s.onerror=()=>res(null); document.head.appendChild(s); });}
-
+  // ---------- ICONOS ----------
   const Icons={folder:`<svg width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="M10 4l2 2h8a2 2 0 0 1 2 2v1H2V6a2 2 0 0 1 2-2z"/><path fill="currentColor" d="M2 9h20v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2z"/></svg>`,file:`<svg width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path fill="currentColor" d="M14 2v6h6"/></svg>`,pdf:`<svg width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="M6 2h8l6 6v12a2 2 0 0 1-2 2H6z"/><text x="7" y="17" font-size="7" fill="#fff" font-family="Arial, sans-serif">PDF</text></svg>`,zip:`<svg width="18" height="18" viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2" fill="currentColor"/><path fill="#fff" d="M10 5h4v2h-4V5m0 3h4v2h-4V8m0 3h4v2h-4v-2m0 3h4v2h-4v-2"/></svg>`};
 
-  function fmtDate(iso){ if(!iso) return "—"; try{ const d=new Date(iso+(iso.length===10?"T00:00:00":"")); return d.toLocaleDateString("es-AR",{year:"numeric",month:"short",day:"2-digit"});}catch{return "—"}}
-  function setPathToHash(path){ location.hash=encodeURIComponent(path); }
-  function findNodeByPath(root,path){ if(path==="/"||path==="") return root; const parts=path.split("/").filter(Boolean); let node=root; for(const p of parts){ if(!node||node.type!=="dir"||!node.children) return null; node=node.children.find(ch=>ch.name===p); if(!node) return null;} return node; }
-  function sortItems(items,how){ const arr=items.slice(); arr.sort((a,b)=>{ if(a.type!==b.type) return a.type==="dir"?-1:1; if(how==="date"){ const da=a.date?Date.parse(a.date):0; const db=b.date?Date.parse(b.date):0; return db-da;} return a.name.localeCompare(b.name,"es");}); return arr; }
+  // ---------- ESTRUCTURA DEMO SEGÚN TU ORGANIZACIÓN ----------
+  const basicasMaterias=["Análisis Matemático I","Álgebra y Geometría Analítica","Física I","Química General","Sistemas de Representación","Ingeniería y Sociedad","Fundamentos de Informática","Análisis Matemático II","Física II","Probabilidad y Estadística","Inglés I"];
+  function materiaNodo(nombre){return {name:nombre,type:"dir",children:[{name:"Parciales",type:"dir",children:[]},{name:"Finales",type:"dir",children:[]},{name:"Material de estudio",type:"dir",children:[]}]}}
+  function materiasLista(nombres){return nombres.map(materiaNodo)}
+  const civilA1=["Ingeniería Civil I"], civilA2=["Estabilidad","Ingeniería Civil II","Tecnología de los Materiales"], civilA3=["Resistencia de Materiales","Tecnología del Hormigón","Tecnología de la Construcción","Geotopografía","Hidráulica General y Aplicada","Instalaciones","Economía","Inglés II"];
+  const mecanicaA1=["Ingeniería Mecánica I"], mecanicaA2=["Estabilidad I","Materiales Metálicos","Materiales No Metálicos","Ingeniería Mecánica II","Inglés Técnico I"], mecanicaA3=["Cálculo Avanzado","Diseño Mecánico","Estabilidad II","Mecánica Racional","Mediciones y Ensayos Industriales","Termodinámica","Ing. Ambiental y Seguridad Industrial","Inglés Técnico II"];
+  const electricaA1=["Integración Eléctrica I (Int)"], electricaA2=["Electrotecnia I","Mecánica Técnica","Integración Eléctrica II (Int)","Cálculo Numérico","Inglés I"], electricaA3=["Tecnologías y Ensayos de Materiales Eléctricos","Instrumentos y Mediciones Eléctricas","Teoría de los Campos","Física III","Máquinas Eléctricas I","Electrotecnia II","Termodinámica","Fundamentos para el Análisis de Señales"];
+  const autoA1=["Ingeniería en la Industria Automotriz I"];
+  function anioNodo(n, materias){return {name:String(n)+"º año",type:"dir",children:materiasLista(materias)}}
+  function carreraNodo(nombre, años){const t=[{year:1,list:años[1]||[]},{year:2,list:años[2]||[]},{year:3,list:años[3]||[]},{year:4,list:años[4]||[]},{year:5,list:años[5]||[]}]; return {name:nombre,type:"dir",children:t.map(a=>anioNodo(a.year,a.list))}}
 
-  const rowsEl=document.getElementById("rows"), emptyEl=document.getElementById("empty"), bcEl=document.getElementById("breadcrumbs"), qEl=document.getElementById("q"), sortEl=document.getElementById("sortBy"), upBtn=document.getElementById("goUp"), themeToggle=document.getElementById("themeToggle");
-  const overlay=document.getElementById("preview"), pvView=document.getElementById("pv-view"), pvTitle=document.getElementById("pv-title"), pvClose=document.getElementById("pv-close"), pvSlider=document.getElementById("pv-slider");
-  const contribEl=document.getElementById("contrib");
-
-  function applyTheme(t){ document.body.classList.toggle("light", t==="light"); }
-  applyTheme(localStorage.getItem("theme")||"dark");
-  themeToggle.addEventListener("click",()=>{ const now=document.body.classList.contains("light")?"dark":"light"; localStorage.setItem("theme", now); applyTheme(now); });
-
-  let datasetRoot = null;
-  fetch("index.json").then(r=>r.ok?r.json():Promise.reject()).then(data=>{ datasetRoot=data; init(); }).catch(()=>{
-    datasetRoot={"name":"","type":"dir","children":[{"name":"Básicas","type":"dir","children":[{"name":"Física I","type":"dir","children":[{"name":"Parciales","type":"dir","children":[{"name":"FisicaI_Parcial-25-06-23-_Hecho_.pdf","type":"file","ext":"pdf","file":"FisicaI_Parcial-25-06-23-_Hecho_.pdf","date":"2025-06-23"}]},{"name":"Finales","type":"dir","children":[]},{"name":"Material de estudio","type":"dir","children":[]}]}]}]}; init();
-  });
-
-  function init(){
-    if(!location.hash) setPathToHash("/");
-    syncFromHash();
-    window.addEventListener("hashchange", syncFromHash);
-    qEl.addEventListener("input",()=>renderList(currentNode));
-    sortEl.addEventListener("change",()=>renderList(currentNode));
-    upBtn.addEventListener("click", goUp);
-  }
-
-  let currentPath="/", currentNode=datasetRoot;
-  function renderBreadcrumbs(path){
-    bcEl.innerHTML=""; const frag=document.createDocumentFragment();
-    const add=(label,to)=>{ const a=document.createElement("a"); a.href="javascript:void(0)"; a.textContent=label||"Inicio"; a.addEventListener("click",()=>setPathToHash(to)); frag.appendChild(a); };
-    const parts=path.split("/").filter(Boolean); let acc="/"; add("Inicio","/");
-    for(let i=0;i<parts.length;i++){ const s=document.createElement("span"); s.className="sep"; s.textContent="/"; frag.appendChild(s); acc+=(acc.endsWith("/")?"":"/")+parts[i]; add(parts[i], acc); }
-    bcEl.appendChild(frag);
-  }
-  function renderList(node){
-    const q=(qEl.value||"").trim().toLowerCase(); const sort=sortEl.value;
-    let items=(node.children||[]).filter(Boolean); if(q) items=items.filter(it=>it.name.toLowerCase().includes(q)); items=sortItems(items,sort);
-    rowsEl.innerHTML=""; if(!items.length){ emptyEl.hidden=false; contribEl.hidden=true; return;} emptyEl.hidden=true;
-    for(const it of items){
-      const tr=document.createElement("tr");
-      const nameTd=document.createElement("td");
-      const link=document.createElement("a"); link.className="row"; link.href="javascript:void(0)"; link.innerHTML=`${iconFor(it)} <span>${it.name}</span>`;
-      link.addEventListener("click",()=>{ if(it.type==="dir"){ const next=(currentPath==="/"?"":currentPath)+"/"+it.name; setPathToHash(next);} else { const manifestPath=(currentPath==="/"?"":currentPath)+"/"+it.name; openPreview(manifestPath, it);} });
-      const wrap=document.createElement("div"); wrap.className="nameCell"; wrap.appendChild(link); nameTd.appendChild(wrap);
-      const typeTd=document.createElement("td"); typeTd.className="hide-sm"; const badge=document.createElement("span"); badge.className="type-badge"; badge.textContent=it.type==="dir"?"Carpeta":(it.ext?it.ext.toUpperCase():"Archivo"); typeTd.appendChild(badge);
-      const dateTd=document.createElement("td"); dateTd.className="hide-sm"; dateTd.textContent=fmtDate(it.date);
-      tr.appendChild(nameTd); tr.appendChild(typeTd); tr.appendChild(dateTd); rowsEl.appendChild(tr);
+  // Demo: incluir un parcial real (imagen) que podés colocar junto al index.html
+  // Guardá tu archivo como: ./Básicas/Física II/Parciales/Parcial 25-06-11 (Hecho).jpeg
+  const demo = {name:"",type:"dir",children:[
+    {name:"Básicas",type:"dir",children:materiasLista(basicasMaterias)},
+// Agrego el archivo PDF real de Física I y dejo la imagen demo en Física II
+(function addDemoFiles(){
+  function findNodeByPath(root, path){
+    if(path==="/"||path==="") return root;
+    const parts = path.split("/").filter(Boolean);
+    let node = root;
+    for(const p of parts){
+      if(!node || node.type!=="dir" || !node.children) return null;
+      node = node.children.find(ch => ch.name === p);
+      if(!node) return null;
     }
-    // Nota de colaboración
-    contribEl.hidden = false;
-    contribEl.textContent = "Si tenés algún parcial, final o material mandalo a este mail: " + CONTACT_EMAIL;
+    return node;
   }
-  function goUp(){ if(currentPath==="/"||currentPath==="")return; const parts=currentPath.split("/").filter(Boolean); parts.pop(); const up="/"+parts.join("/"); setPathToHash(up||"/"); }
 
-  // Preview
-  let zoom=1, previewFilePath=null, totalHeight=1;
-  function resetPreview(){ pvView.innerHTML=""; zoom=1; pvSlider.value=0; totalHeight=1; }
-  function showOverlay(){ overlay.style.display="flex"; document.body.style.overflow="hidden"; } // lock scroll
-  function hideOverlay(){ overlay.style.display="none"; document.body.style.overflow=""; }
-  async function openPreview(path,node){
+  // PDF en Básicas / Física I / Parciales
+  const nPDF = findNodeByPath(demo, "/Básicas/Física I/Parciales");
+  if(nPDF){
+    nPDF.children.push({
+      name: "Parcial-25-06-23-_Hecho_.pdf",
+      type: "file",
+      ext: "pdf",
+      date: "2025-06-23"
+    });
+  }
+
+  // (opcional) Imagen demo en Física II para seguir probando ambos formatos
+  const nIMG = findNodeByPath(demo, "/Básicas/Física II/Parciales");
+  if(nIMG){
+    nIMG.children.push({
+      name: "Parcial 25-06-11 (Hecho).jpeg",
+      type: "file",
+      ext: "jpg",
+      date: "2025-06-11"
+    });
+  }
+})();
+    carreraNodo("Ingeniería Civil",{1:civilA1,2:civilA2,3:civilA3}),
+    carreraNodo("Ingeniería en Energía Eléctrica",{1:electricaA1,2:electricaA2,3:electricaA3}),
+    carreraNodo("Ingeniería en Industria Automotriz",{1:autoA1}),
+    carreraNodo("Ingeniería Mecánica",{1:mecanicaA1,2:mecanicaA2,3:mecanicaA3})
+  ]};
+  // Agrego nodo de archivo demo (imagen del parcial) dentro de Física II / Parciales
+  (function addDemoFile(){
+    function findNodeByPath(root, path){if(path==="/"||path==="")return root;const parts=path.split("/").filter(Boolean);let node=root;for(const p of parts){if(!node||node.type!=="dir"||!node.children)return null;node=node.children.find(ch=>ch.name===p);if(!node)return null;}return node;}
+    const n = findNodeByPath(demo, "/Básicas/Física II/Parciales");
+    if(n){n.children.push({name:"Parcial 25-06-11 (Hecho).jpeg",type:"file",ext:"jpg",date:"2025-06-11"});}
+  })();
+
+  // ---------- UTILIDADES ----------
+  function fmtDate(iso){if(!iso)return"—";try{const d=new Date(iso+(iso.length===10?"T00:00:00":""));return d.toLocaleDateString("es-AR",{year:"numeric",month:"short",day:"2-digit"});}catch{return"—"}}
+  function getPathFromHash(){const raw=decodeURIComponent(location.hash.replace(/^#/,""));return raw.startsWith("/")?raw:("/"+raw)}
+  function setPathToHash(path){location.hash=encodeURIComponent(path)}
+  function findNodeByPath(root, path){if(path==="/"||path==="")return root;const parts=path.split("/").filter(Boolean);let node=root;for(const p of parts){if(!node||node.type!=="dir"||!node.children)return null;node=node.children.find(ch=>ch.name===p);if(!node)return null;}return node}
+  function iconFor(item){if(item.type==="dir")return Icons.folder;const e=(item.ext||"").toLowerCase();if(e==="pdf")return Icons.pdf;if(e==="zip")return Icons.zip;return Icons.file}
+  function sortItems(items,how){const arr=items.slice();arr.sort((a,b)=>{if(a.type!==b.type)return a.type==="dir"?-1:1;if(how==="date"){const da=a.date?Date.parse(a.date):0;const db=b.date?Date.parse(b.date):0;return db-da}return a.name.localeCompare(b.name,"es")});return arr}
+
+  // ---------- ELEMENTOS ----------
+  const rowsEl=document.getElementById("rows"), emptyEl=document.getElementById("empty"), bcEl=document.getElementById("breadcrumbs"), qEl=document.getElementById("q"), sortEl=document.getElementById("sortBy"), upBtn=document.getElementById("goUp"), themeToggle=document.getElementById("themeToggle");
+  const overlay=document.getElementById("preview"), pvView=document.getElementById("pv-view"), pvTitle=document.getElementById("pv-title"), pvClose=document.getElementById("pv-close"), pvSlider=document.getElementById("pv-slider"), contribNote=document.getElementById("contrib-note"), contribMailEl=document.getElementById("contrib-mail");
+
+  // ---------- TEMA ----------
+  if(contribMailEl&&CONTACT_EMAIL){contribMailEl.textContent=CONTACT_EMAIL;contribMailEl.href='mailto:'+CONTACT_EMAIL;}
+  const applyTheme=t=>document.body.classList.toggle("light",t==="light");applyTheme(localStorage.getItem("theme")||"dark");themeToggle.addEventListener("click",()=>{const now=document.body.classList.contains("light")?"dark":"light";localStorage.setItem("theme",now);applyTheme(now)});
+
+  // ---------- LISTADO ----------
+  let currentPath="/", currentNode=demo, datasetRoot=demo;
+  function renderBreadcrumbs(path){bcEl.innerHTML="";const frag=document.createDocumentFragment();const add=(label,to)=>{const a=document.createElement("a");a.href="javascript:void(0)";a.textContent=label||"Inicio";a.addEventListener("click",()=>setPathToHash(to));frag.appendChild(a)};const parts=path.split("/").filter(Boolean);let acc="/";add("Inicio","/");for(let i=0;i<parts.length;i++){const s=document.createElement("span");s.className="sep";s.textContent="/";frag.appendChild(s);acc+=(acc.endsWith("/")?"":"/")+parts[i];add(parts[i],acc)};bcEl.appendChild(frag)}
+  function renderList(node){const q=(qEl.value||"").trim().toLowerCase();const sort=sortEl.value;let items=(node.children||[]).filter(Boolean);if(q)items=items.filter(it=>it.name.toLowerCase().includes(q));items=sortItems(items,sort);rowsEl.innerHTML="";if(!items.length){emptyEl.hidden=false;return}else emptyEl.hidden=true;for(const it of items){const tr=document.createElement("tr");const nameTd=document.createElement("td");const link=document.createElement("a");link.className="row";link.href="javascript:void(0)";link.innerHTML=`${iconFor(it)} <span>${it.name}</span>`;link.addEventListener("click",()=>{if(it.type==="dir"){const next=(currentPath==="/"?"":currentPath)+"/"+it.name;setPathToHash(next)}else{openPreview((currentPath==="/"?"":currentPath)+"/"+it.name, it)}});const wrap=document.createElement("div");wrap.className="nameCell";wrap.appendChild(link);nameTd.appendChild(wrap);const typeTd=document.createElement("td");typeTd.className="hide-sm";const badge=document.createElement("span");badge.className="type-badge";badge.textContent=it.type==="dir"?"Carpeta":(it.ext?it.ext.toUpperCase():"Archivo");typeTd.appendChild(badge);const dateTd=document.createElement("td");dateTd.className="hide-sm";dateTd.textContent=fmtDate(it.date);tr.appendChild(nameTd);tr.appendChild(typeTd);tr.appendChild(dateTd);rowsEl.appendChild(tr)}}
+  function goUp(){if(currentPath==="/"||currentPath==="")return;const parts=currentPath.split("/").filter(Boolean);parts.pop();const up="/"+parts.join("/");setPathToHash(up||"/")}
+
+  // ---------- PREVIEW (PDF.js si está; fallback nativo si no) ----------
+  let zoom=1; let previewFilePath=null; let totalHeight=1; // para slider
+
+  function resetPreview(){pvView.innerHTML="";zoom=1;pvSlider.value=0;totalHeight=1}
+  function showOverlay(){overlay.style.display="flex"}
+  function hideOverlay(){overlay.style.display="none"}
+
+  async function openPreview(path, node){
     resetPreview(); previewFilePath=path; pvTitle.textContent=node?.name||path.split("/").pop(); showOverlay();
     const ext=(node?.ext||path.split(".").pop()||"").toLowerCase();
-    if(["jpg","jpeg","png","webp","gif"].includes(ext)){ const img=document.createElement("img"); img.className="pv-img"; img.alt=node?.name||"Imagen"; img.src=resolveFileUrl(node,path); pvView.appendChild(img); updateSliderTarget(); return; }
-    if(ext==="pdf"){ await renderPDF(resolveFileUrl(node,path)); return; }
-    const p=document.createElement("p"); p.style.color="var(--muted)"; p.style.padding="56px 16px"; p.textContent="Tipo de archivo no soportado en el visor."; pvView.appendChild(p);
+    if(["jpg","jpeg","png","webp"].includes(ext)){
+      const img=document.createElement("img"); img.className="pv-img"; img.alt=node?.name||"Imagen"; img.src="."+path; pvView.appendChild(img); updateSliderTarget();
+    } else if(ext==="pdf"){
+      await renderPDF("."+path);
+    } else {
+      const p=document.createElement("p"); p.style.color="var(--muted)"; p.style.padding="56px 16px"; p.textContent="Tipo de archivo no soportado en el visor."; pvView.appendChild(p);
+    }
   }
-  async function renderPDF(url){
-    const pdfjs=await ensurePDFJS();
-    if(pdfjs){
-      try{ const loading=pdfjs.getDocument(url); const pdf=await loading.promise;
-        for(let p=1;p<=pdf.numPages;p++){ const page=await pdf.getPage(p); const viewport=page.getViewport({scale:zoom}); const canvas=document.createElement("canvas"); canvas.className="pv-canvas"; const ctx=canvas.getContext("2d"); canvas.width=viewport.width; canvas.height=viewport.height; await page.render({canvasContext:ctx,viewport}).promise; pvView.appendChild(canvas); }
-        updateSliderTarget();
-      }catch(e){ renderPDFNative(url); }
-    }else{ renderPDFNative(url); }
-  }
-  function renderPDFNative(url){ const ifr=document.createElement("iframe"); ifr.className="pv-iframe"; ifr.src=makePDFUrlWithZoom(url, zoom); pvView.appendChild(ifr); updateSliderTarget(); }
-  function makePDFUrlWithZoom(url,z){ const pct=Math.round(z*100); const [base,hash]=url.split("#"); const params=new URLSearchParams(hash||""); params.set("zoom", String(pct)); return base+"#"+params.toString(); }
-  function updateSliderTarget(){ const maxScroll=Math.max(0, pvView.scrollHeight - pvView.clientHeight); totalHeight=maxScroll||1; pvSlider.value=Math.round((pvView.scrollTop/totalHeight)*100); }
-  pvClose.addEventListener("click",()=>{ hideOverlay(); });
-  pvSlider.addEventListener("input",()=>{ const pct=Number(pvSlider.value)/100; pvView.scrollTop=pct*totalHeight; });
-  pvView.addEventListener("scroll", updateSliderTarget);
-  window.addEventListener("keydown",(e)=>{ if(e.key==="Escape") hideOverlay(); });
 
-  async function syncFromHash(){ const raw=decodeURIComponent(location.hash.replace(/^#/,"")); if(raw.startsWith("/preview?file=")){ const fp=raw.replace("/preview?file=",""), name=fp.split("/").pop(), ext=(name.split(".").pop()||"").toLowerCase(); openPreview(fp,{name,type:"file",ext}); return; } hideOverlay(); const path=raw.startsWith("/")?raw:("/"+raw); currentPath=path||"/"; renderBreadcrumbs(currentPath); currentNode=findNodeByPath(datasetRoot,currentPath)||datasetRoot; renderList(currentNode); }
+  async function renderPDF(url){
+    const pdfjs = await ensurePDFJS();
+    if (pdfjs) {
+      // Render propio con PDF.js
+      const loading=pdfjs.getDocument(url); const pdf=await loading.promise;
+      for(let p=1;p<=pdf.numPages;p++){
+        const page=await pdf.getPage(p); const viewport=page.getViewport({scale:zoom});
+        const canvas=document.createElement("canvas"); canvas.className="pv-canvas"; const ctx=canvas.getContext("2d");
+        canvas.width=viewport.width; canvas.height=viewport.height;
+        await page.render({canvasContext:ctx, viewport}).promise; pvView.appendChild(canvas);
+      }
+      updateSliderTarget();
+    } else {
+      // Fallback nativo: usamos <iframe> con parámetro #zoom
+      renderPDFNative(url);
+    }
+  }
+
+  function renderPDFNative(url){
+    const ifr=document.createElement("iframe"); ifr.className="pv-iframe"; ifr.src = makePDFUrlWithZoom(url, zoom);
+    pvView.appendChild(ifr); updateSliderTarget();
+  }
+
+  function makePDFUrlWithZoom(url, z){
+    // Muchos viewers soportan #zoom=100 (Chrome, Firefox)
+    const pct = Math.round(z*100);
+    // preserva hash existente
+    const [base, hash] = url.split('#');
+    const params = new URLSearchParams(hash||'');
+    params.set('zoom', String(pct));
+    return base + '#' + params.toString();
+  }
+
+  function rerenderIfPDF(){
+    // Si hay canvas => PDF.js; si hay iframe => nativo
+    const isPDFJS = pvView.querySelector("canvas");
+    const isNative = pvView.querySelector("iframe.pv-iframe");
+    if(isPDFJS){ const url = "."+previewFilePath; pvView.innerHTML=""; renderPDF(url); return; }
+    if(isNative){ const ifr = pvView.querySelector("iframe.pv-iframe"); if (ifr && previewFilePath){ ifr.src = makePDFUrlWithZoom("."+previewFilePath, zoom); }
+      return; }
+  }
+
+  function updateSliderTarget(){
+    const maxScroll = Math.max(0, pvView.scrollHeight - pvView.clientHeight);
+    totalHeight = maxScroll || 1;
+    pvSlider.value = Math.round((pvView.scrollTop / totalHeight) * 100);
+  }
+
+  // Controles toolbar
+  pvClose.addEventListener("click", ()=>{hideOverlay()});
+  pvZoomIn.addEventListener("click", ()=>{zoom = Math.min(3, zoom+0.1); rerenderIfPDF(); updateSliderTarget();});
+  pvZoomOut.addEventListener("click", ()=>{zoom = Math.max(0.5, zoom-0.1); rerenderIfPDF(); updateSliderTarget();});
+  pvSlider.addEventListener("input", ()=>{const pct = Number(pvSlider.value)/100; pvView.scrollTop = pct * totalHeight;});
+  pvView.addEventListener("scroll", updateSliderTarget);
+  window.addEventListener("keydown", (e)=>{ if(e.key === "Escape") hideOverlay(); });
+
+  // ---------- SYNC HASH ----------
+  async function syncFromHash(){
+    const raw=decodeURIComponent(location.hash.replace(/^#/,""));
+    if(raw.startsWith("/preview?file=")){
+      const fp=raw.replace("/preview?file=",""), name=fp.split("/").pop(), ext=(name.split(".").pop()||"").toLowerCase();
+      openPreview(fp,{name, type:"file", ext}); return;
+    }
+    hideOverlay(); const path = raw.startsWith("/")?raw:("/"+raw); currentPath=path||"/"; renderBreadcrumbs(currentPath); datasetRoot=demo; currentNode=findNodeByPath(datasetRoot,currentPath)||demo; renderList(currentNode);
+  }
+
+  // ---------- EVENTOS ----------
+  window.addEventListener("hashchange", syncFromHash); qEl.addEventListener("input",()=>renderList(currentNode)); sortEl.addEventListener("change",()=>renderList(currentNode)); upBtn.addEventListener("click", goUp);
+
+  // Primera carga
+  if(!location.hash) setPathToHash("/");
+  syncFromHash();
+
+  // ---------- SELF-TESTS (para depurar) ----------
+  (function runSelfTests(){
+    try{
+      console.group("FRGP self-tests");
+      const n1 = (function(root){const p="/Básicas".split("/").filter(Boolean);let n=root;for(const s of p){n=n.children.find(c=>c.name===s);}return n;})(demo);
+      console.assert(!!n1, "Existe carpeta Básicas");
+      const n2 = (function(root){const p="/Básicas/Física II/Parciales".split("/").filter(Boolean);let n=root;for(const s of p){n=n.children.find(c=>c.name===s);}return n;})(demo);
+      console.assert(!!n2 && n2.children.some(ch=>ch.name==="Parcial 25-06-11 (Hecho).jpeg"), "Archivo demo presente");
+      ensurePDFJS().then((lib)=>{
+        console.log(lib?"PDF.js cargado":"PDF.js no disponible: usando visor nativo");
+      });
+      const sorted = (function(){
+  const CONTACT_EMAIL='examenes@tu-dominio.com';const a=[{name:"b",type:"file"},{name:"a",type:"dir"}];return sortItems(a,"name");})();
+      console.assert(sorted[0].type === "dir", "Carpetas primero en sort");
+      const sortedDate = (function(){
+  const CONTACT_EMAIL='examenes@tu-dominio.com';const a=[{name:"a",type:"file",date:"2020-01-01"},{name:"b",type:"file",date:"2024-01-01"}];return sortItems(a,"date");})();
+      console.assert(sortedDate[0].date === "2024-01-01", "Orden por fecha (reciente primero)");
+      console.groupEnd();
+    }catch(err){console.error("Self-tests error:", err)}
+  })();
 })();
 </script>
 </body>
