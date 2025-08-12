@@ -10,11 +10,13 @@
     .light { --bg:#f6f8fb; --panel:#fff; --text:#101418; --muted:#5b6876; --accent:#0e63ff; --border:#e6eaf0; --hover:#f2f5f9; --link:#0e63ff; --shadow:0 8px 20px rgba(0,0,0,.08) }
     *{box-sizing:border-box} html,body{height:100%} body{margin:0;font:14px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;background:var(--bg);color:var(--text)}
     a{color:var(--link);text-decoration:none}
-    .grid{display:grid;grid-template-columns:240px minmax(0,1fr) 240px;min-height:100vh}
-    .ad-rail{background:var(--panel);border-right:1px solid var(--border);border-left:1px solid var(--border);display:flex;align-items:flex-start;justify-content:center;padding:12px}
-    .ad-slot{width:90%;min-height:600px;border:1px dashed var(--border);border-radius:12px;padding:12px;color:var(--muted);font-size:12px;text-align:center;display:flex;align-items:center;justify-content:center}
+
+    .grid{display:grid;grid-template-columns:180px minmax(0,1fr) 180px;min-height:100vh} /* rails más cerca del contenido */
+    .ad-rail{background:var(--panel);border-right:1px solid var(--border);border-left:1px solid var(--border);display:flex;align-items:flex-start;justify-content:center;padding:8px}
+    .ad-slot{width:95%;min-height:100px;border:1px dashed var(--border);border-radius:12px;padding:8px;color:var(--muted);font-size:12px;text-align:center;display:flex;align-items:center;justify-content:center}
+
     #center{position:relative}
-    .wrap{max-width:1100px;margin:0 auto;padding:24px 16px 64px}
+    .wrap{max-width:1100px;margin:0 auto;padding:24px 16px 48px}
     header.site{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;margin-bottom:16px}
     .title{display:flex;gap:12px;align-items:baseline}
     .title h1{margin:0;font-size:22px;letter-spacing:.2px}
@@ -37,33 +39,41 @@
     .nameCell{display:flex;align-items:center;gap:10px}
     .type-badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:999px;border:1px solid var(--border);color:var(--muted)}
     .empty{padding:18px 14px;color:var(--muted)}
+    .contrib{padding:12px 14px;color:var(--muted);font-size:13px;border-top:1px dashed var(--border);background:var(--panel)}
+
     .list tr:hover{background:var(--hover)}
     @media (prefers-reduced-motion:no-preference){.list tr{transition:background .15s ease,transform .15s ease,box-shadow .15s ease}.list tr:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.2)}}
-    .preview-overlay{position:absolute;inset:0;display:none;align-items:flex-start;justify-content:center;background:rgba(0,0,0,.4);backdrop-filter:saturate(120%) blur(1px);z-index:40}
+
+    /* PREVIEW: ahora fixed + scroll lock en body */
+    .preview-overlay{position:fixed;inset:0;display:none;align-items:flex-start;justify-content:center;background:rgba(0,0,0,.5);backdrop-filter:saturate(120%) blur(1px);z-index:1000}
     .preview-card{margin-top:24px;width:min(1100px,calc(100% - 64px));max-height:calc(100vh - 48px);background:var(--panel);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);position:relative;display:grid;grid-template-columns:1fr 12px}
     .pv-toolbar{position:absolute;left:0;top:0;right:12px;height:44px;display:flex;align-items:center;gap:8px;padding:6px 8px;border-bottom:1px solid var(--border);background:var(--panel);border-top-left-radius:14px}
-    .pv-btn{padding:8px 10px;border-radius:10px;border:1px solid var(--border);background:var(--hover)}
+    .pv-btn{padding:8px 10px;border-radius:10px;border:1px solid var(--border);background:var(--hover);color:var(--text);cursor:pointer}
     .pv-title{margin-left:6px;color:var(--muted);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .pv-close{font-weight:700}
-    .pv-view{overflow:auto;scroll-behavior:smooth;border-top-left-radius:14px;border-bottom-left-radius:14px}
+    .pv-view{overflow:auto;scroll-behavior:smooth;border-top-left-radius:14px;border-bottom-left-radius:14px;min-height:200px}
     .pv-scroll{grid-column:2/3;grid-row:1/3;background:var(--hover);border-left:1px solid var(--border);border-top-right-radius:14px;border-bottom-right-radius:14px;display:flex;align-items:center;justify-content:center}
     .pv-scroll input[type=range]{writing-mode:bt-lr;-webkit-appearance:slider-vertical;height:80%;width:10px;background:transparent}
     .pv-canvas{display:block;margin:52px auto 16px}
     .pv-img{display:block;margin:52px auto 16px;max-width:calc(100% - 24px)}
     .pv-iframe{display:block;width:100%;height:calc(100vh - 96px);border:0;background:#fff;margin-top:52px}
-    @media (max-width:1024px){.grid{grid-template-columns:1fr}.ad-rail{order:2}.ad-slot{min-height:120px}}
+
+    @media (max-width:1024px){.grid{grid-template-columns:1fr}.ad-rail{order:2}.ad-slot{min-height:100px}}
   </style>
 </head>
 <body>
   <div class="grid">
     <aside class="ad-rail left"><div class="ad-slot">Zona de anuncio (izquierda)</div></aside>
+
     <main id="center">
       <div class="wrap" id="list-shell">
         <header class="site">
           <div class="title"><h1>Biblioteca de FRGP</h1><span class="sub">Archivos de UTN Pacheco</span></div>
           <div class="actions"><button id="themeToggle" title="Cambiar tema">🌓 Modo</button></div>
         </header>
-        <nav class="breadcrumbs" id="breadcrumbs"></nav>
+
+        <nav class="breadcrumbs" id="breadcrumbs" aria-label="Migas de pan"></nav>
+
         <div class="toolbar">
           <div class="search">
             <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M10 4a6 6 0 0 1 4.472 9.994l4.267 4.267l-1.414 1.414l-4.267-4.267A6 6 0 1 1 10 4m0 2a4 4 0 1 0 0 8a4 4 0 0 0 0-8"/></svg>
@@ -72,127 +82,132 @@
           <select id="sortBy" aria-label="Ordenar por"><option value="name">Ordenar: Nombre (A→Z)</option><option value="date">Ordenar: Fecha (reciente primero)</option></select>
           <button id="goUp" title="Subir nivel">⬆️ Subir</button>
         </div>
+
         <div class="panel">
-          <table class="list" role="grid" aria-label="Listado de elementos">
+          <table class="list" role="grid" aria-label="Listado">
             <thead><tr><th>Nombre</th><th class="hide-sm">Tipo</th><th class="hide-sm">Fecha</th></tr></thead>
             <tbody id="rows"></tbody>
           </table>
           <div class="empty" id="empty" hidden>No hay elementos que coincidan.</div>
+          <div class="contrib" id="contrib" hidden></div>
         </div>
       </div>
-      <div class="preview-overlay" id="preview">
+
+      <div class="preview-overlay" id="preview" role="dialog" aria-modal="true">
         <div class="preview-card">
           <div class="pv-toolbar">
-            <button class="pv-btn pv-close" id="pv-close">✕</button>
-            <button class="pv-btn" id="pv-zoom-out" title="Alejar">🔍−</button>
-            <button class="pv-btn" id="pv-zoom-in" title="Acercar">🔍＋</button>
+            <button class="pv-btn pv-close" id="pv-close" aria-label="Cerrar">✕</button>
             <div class="pv-title" id="pv-title"></div>
           </div>
           <div class="pv-view" id="pv-view"></div>
-          <div class="pv-scroll"><input id="pv-slider" type="range" min="0" max="100" value="0" step="1" /></div>
+          <div class="pv-scroll"><input id="pv-slider" type="range" min="0" max="100" value="0" step="1" aria-label="Desplazamiento" /></div>
         </div>
       </div>
     </main>
+
     <aside class="ad-rail right"><div class="ad-slot">Zona de anuncio (derecha)</div></aside>
   </div>
 
 <script>
 (function(){
-  // ====== CONFIG MODO SIMPLE (archivos planos en /files) ======
-  const USE_FLAT_FILES = true;               // evita crear mil carpetas
-  const FILES_BASE = "./files/";             // carpeta única donde subís tus PDFs
-  function resolveFileUrl(node, manifestPath) {
-    if (USE_FLAT_FILES) {
-      if (node && node.url)  return node.url;                           // URL absoluta opcional
-      if (node && node.file) return FILES_BASE + encodeURIComponent(node.file); // ./files/<archivo>
-    }
-    return "." + manifestPath; // modo clásico con carpetas reales
-  }
+  const CONTACT_EMAIL = "tucorreo@ejemplo.com"; // <<< cambiá este mail
+  const USE_FLAT_FILES = true;
+  const FILES_BASE = "./files/";
+  function resolveFileUrl(node, manifestPath){ if(USE_FLAT_FILES){ if(node?.url) return node.url; if(node?.file) return FILES_BASE + encodeURIComponent(node.file);} return "."+manifestPath; }
 
-  // ---------- CARGA SEGURA DE PDF.js ----------
-  const PDFJS_SRC = "https://cdn.jsdelivr.net/npm/pdfjs-dist@4.4.168/build/pdf.min.js";
-  const PDFJS_WORKER = "https://cdn.jsdelivr.net/npm/pdfjs-dist@4.4.168/build/pdf.worker.min.js";
-  let _pdfReadyPromise = null;
-  function ensurePDFJS(){
-    if (typeof window.pdfjsLib !== 'undefined') {
-      window.pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS_WORKER;
-      return Promise.resolve(window.pdfjsLib);
-    }
-    if (_pdfReadyPromise) return _pdfReadyPromise;
-    _pdfReadyPromise = new Promise((resolve)=>{
-      const s = document.createElement('script');
-      s.src = PDFJS_SRC; s.async = true;
-      s.onload = ()=>{
-        if (typeof window.pdfjsLib !== 'undefined') {
-          window.pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS_WORKER;
-          resolve(window.pdfjsLib);
-        } else { resolve(null); }
-      };
-      s.onerror = ()=> resolve(null);
-      document.head.appendChild(s);
-    });
-    return _pdfReadyPromise;
-  }
+  // PDF.js load
+  const PDFJS_SRC="https://cdn.jsdelivr.net/npm/pdfjs-dist@4.4.168/build/pdf.min.js";
+  const PDFJS_WORKER="https://cdn.jsdelivr.net/npm/pdfjs-dist@4.4.168/build/pdf.worker.min.js";
+  let _pdfReadyPromise=null;
+  function ensurePDFJS(){ if(window.pdfjsLib){ window.pdfjsLib.GlobalWorkerOptions.workerSrc=PDFJS_WORKER; return Promise.resolve(window.pdfjsLib);} if(_pdfReadyPromise) return _pdfReadyPromise; return _pdfReadyPromise=new Promise(res=>{ const s=document.createElement('script'); s.src=PDFJS_SRC; s.async=true; s.onload=()=>{ if(window.pdfjsLib){ window.pdfjsLib.GlobalWorkerOptions.workerSrc=PDFJS_WORKER; res(window.pdfjsLib);} else res(null);}; s.onerror=()=>res(null); document.head.appendChild(s); });}
 
-  // ---------- ICONOS ----------
   const Icons={folder:`<svg width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="M10 4l2 2h8a2 2 0 0 1 2 2v1H2V6a2 2 0 0 1 2-2z"/><path fill="currentColor" d="M2 9h20v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2z"/></svg>`,file:`<svg width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path fill="currentColor" d="M14 2v6h6"/></svg>`,pdf:`<svg width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="M6 2h8l6 6v12a2 2 0 0 1-2 2H6z"/><text x="7" y="17" font-size="7" fill="#fff" font-family="Arial, sans-serif">PDF</text></svg>`,zip:`<svg width="18" height="18" viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2" fill="currentColor"/><path fill="#fff" d="M10 5h4v2h-4V5m0 3h4v2h-4V8m0 3h4v2h-4v-2m0 3h4v2h-4v-2"/></svg>`};
 
-  // ---------- UTILIDADES ----------
-  function fmtDate(iso){if(!iso)return"—";try{const d=new Date(iso+(iso.length===10?"T00:00:00":""));return d.toLocaleDateString("es-AR",{year:"numeric",month:"short",day:"2-digit"});}catch{return"—"}}
-  function getPathFromHash(){const raw=decodeURIComponent(location.hash.replace(/^#/,""));return raw.startsWith("/")?raw:("/"+raw)}
-  function setPathToHash(path){location.hash=encodeURIComponent(path)}
-  function findNodeByPath(root, path){if(path==="/"||path==="")return root;const parts=path.split("/").filter(Boolean);let node=root;for(const p of parts){if(!node||node.type!=="dir"||!node.children)return null;node=node.children.find(ch=>ch.name===p);if(!node)return null;}return node}
-  function iconFor(item){if(item.type==="dir")return Icons.folder;const e=(item.ext||"").toLowerCase();if(e==="pdf")return Icons.pdf;if(e==="zip")return Icons.zip;return Icons.file}
-  function sortItems(items,how){const arr=items.slice();arr.sort((a,b)=>{if(a.type!==b.type)return a.type==="dir"?-1:1;if(how==="date"){const da=a.date?Date.parse(a.date):0;const db=b.date?Date.parse(b.date):0;return db-da}return a.name.localeCompare(b.name,"es")});return arr}
+  function fmtDate(iso){ if(!iso) return "—"; try{ const d=new Date(iso+(iso.length===10?"T00:00:00":"")); return d.toLocaleDateString("es-AR",{year:"numeric",month:"short",day:"2-digit"});}catch{return "—"}}
+  function setPathToHash(path){ location.hash=encodeURIComponent(path); }
+  function findNodeByPath(root,path){ if(path==="/"||path==="") return root; const parts=path.split("/").filter(Boolean); let node=root; for(const p of parts){ if(!node||node.type!=="dir"||!node.children) return null; node=node.children.find(ch=>ch.name===p); if(!node) return null;} return node; }
+  function sortItems(items,how){ const arr=items.slice(); arr.sort((a,b)=>{ if(a.type!==b.type) return a.type==="dir"?-1:1; if(how==="date"){ const da=a.date?Date.parse(a.date):0; const db=b.date?Date.parse(b.date):0; return db-da;} return a.name.localeCompare(b.name,"es");}); return arr; }
 
-  // ---------- ELEMENTOS ----------
   const rowsEl=document.getElementById("rows"), emptyEl=document.getElementById("empty"), bcEl=document.getElementById("breadcrumbs"), qEl=document.getElementById("q"), sortEl=document.getElementById("sortBy"), upBtn=document.getElementById("goUp"), themeToggle=document.getElementById("themeToggle");
-  const overlay=document.getElementById("preview"), pvView=document.getElementById("pv-view"), pvTitle=document.getElementById("pv-title"), pvClose=document.getElementById("pv-close"), pvZoomIn=document.getElementById("pv-zoom-in"), pvZoomOut=document.getElementById("pv-zoom-out"), pvSlider=document.getElementById("pv-slider");
+  const overlay=document.getElementById("preview"), pvView=document.getElementById("pv-view"), pvTitle=document.getElementById("pv-title"), pvClose=document.getElementById("pv-close"), pvSlider=document.getElementById("pv-slider");
+  const contribEl=document.getElementById("contrib");
 
-  // ---------- TEMA ----------
-  const applyTheme=t=>document.body.classList.toggle("light",t==="light");applyTheme(localStorage.getItem("theme")||"dark");themeToggle.addEventListener("click",()=>{const now=document.body.classList.contains("light")?"dark":"light";localStorage.setItem("theme",now);applyTheme(now)});
+  function applyTheme(t){ document.body.classList.toggle("light", t==="light"); }
+  applyTheme(localStorage.getItem("theme")||"dark");
+  themeToggle.addEventListener("click",()=>{ const now=document.body.classList.contains("light")?"dark":"light"; localStorage.setItem("theme", now); applyTheme(now); });
 
-  // ---------- CARGA MANIFEST ----------
-  let datasetRoot = { name:"", type:"dir", children: [] };
-  fetch("index.json").then(r=>r.ok?r.json():Promise.reject()).then(data=>{datasetRoot=data;}).catch(()=>{
-    console.warn("No se pudo cargar index.json; construyendo dataset mínimo.");
-    datasetRoot={
-      "name":"",
-      "type":"dir",
-      "children":[
-        {"name":"Básicas","type":"dir","children":[
-          {"name":"Física I","type":"dir","children":[
-            {"name":"Parciales","type":"dir","children":[
-              {"name":"FisicaI_Parcial-25-06-23-_Hecho_.pdf","type":"file","ext":"pdf","file":"FisicaI_Parcial-25-06-23-_Hecho_.pdf","date":"2025-06-23"}
-            ]},
-            {"name":"Finales","type":"dir","children":[]},
-            {"name":"Material de estudio","type":"dir","children":[]}
-          ]}
-        ]}
-      ]
-    };
-  }).finally(()=>{
-    // ---------- NAVEGACIÓN Y LISTADO ----------
-    let currentPath="/", currentNode=datasetRoot;
-    function renderBreadcrumbs(path){bcEl.innerHTML="";const frag=document.createDocumentFragment();const add=(label,to)=>{const a=document.createElement("a");a.href="javascript:void(0)";a.textContent=label||"Inicio";a.addEventListener("click",()=>setPathToHash(to));frag.appendChild(a)};const parts=path.split("/").filter(Boolean);let acc="/";add("Inicio","/");for(let i=0;i<parts.length;i++){const s=document.createElement("span");s.className="sep";s.textContent="/";frag.appendChild(s);acc+=(acc.endsWith("/")?"":"/")+parts[i];add(parts[i],acc)};bcEl.appendChild(frag)}
-    function renderList(node){const q=(qEl.value||"").trim().toLowerCase();const sort=sortEl.value;let items=(node.children||[]).filter(Boolean);if(q)items=items.filter(it=>it.name.toLowerCase().includes(q));items=sortItems(items,sort);rowsEl.innerHTML="";if(!items.length){emptyEl.hidden=false;return}else emptyEl.hidden=true;for(const it of items){const tr=document.createElement("tr");const nameTd=document.createElement("td");const link=document.createElement("a");link.className="row";link.href="javascript:void(0)";link.innerHTML=`${iconFor(it)} <span>${it.name}</span>`;link.addEventListener("click",()=>{if(it.type==="dir"){const next=(currentPath==="/"?"":currentPath)+"/"+it.name;setPathToHash(next)}else{const manifestPath=(currentPath==="/"?"":currentPath)+"/"+it.name;openPreview(manifestPath,it)}});const wrap=document.createElement("div");wrap.className="nameCell";wrap.appendChild(link);nameTd.appendChild(wrap);const typeTd=document.createElement("td");typeTd.className="hide-sm";const badge=document.createElement("span");badge.className="type-badge";badge.textContent=it.type==="dir"?"Carpeta":(it.ext?it.ext.toUpperCase():"Archivo");typeTd.appendChild(badge);const dateTd=document.createElement("td");dateTd.className="hide-sm";dateTd.textContent=fmtDate(it.date);tr.appendChild(nameTd);tr.appendChild(typeTd);tr.appendChild(dateTd);rowsEl.appendChild(tr)}}
-    function goUp(){if(currentPath==="/"||currentPath==="")return;const parts=currentPath.split("/").filter(Boolean);parts.pop();const up="/"+parts.join("/");setPathToHash(up||"/")}
-    // Preview state
-    let zoom=1; let previewFilePath=null; let totalHeight=1; let lastPreviewNode=null;
-    function resetPreview(){pvView.innerHTML="";zoom=1;pvSlider.value=0;totalHeight=1}
-    function showOverlay(){overlay.style.display="flex"}
-    function hideOverlay(){overlay.style.display="none"}
-    async function openPreview(path,node){resetPreview();previewFilePath=path;lastPreviewNode=node;pvTitle.textContent=node?.name||path.split("/").pop();showOverlay();const ext=(node?.ext||path.split(".").pop()||"").toLowerCase();if(["jpg","jpeg","png","webp","gif"].includes(ext)){const img=document.createElement("img");img.className="pv-img";img.alt=node?.name||"Imagen";img.src=resolveFileUrl(node,path);pvView.appendChild(img);updateSliderTarget();return}else if(ext==="pdf"){await renderPDF(resolveFileUrl(node,path));return}else{const p=document.createElement("p");p.style.color="var(--muted)";p.style.padding="56px 16px";p.textContent="Tipo de archivo no soportado en el visor.";pvView.appendChild(p);}}
-    async function renderPDF(url){const pdfjs=await ensurePDFJS();if(pdfjs){try{const loading=pdfjs.getDocument(url);const pdf=await loading.promise;for(let p=1;p<=pdf.numPages;p++){const page=await pdf.getPage(p);const viewport=page.getViewport({scale:zoom});const canvas=document.createElement("canvas");canvas.className="pv-canvas";const ctx=canvas.getContext("2d");canvas.width=viewport.width;canvas.height=viewport.height;await page.render({canvasContext:ctx,viewport}).promise;pvView.appendChild(canvas)}updateSliderTarget()}catch(err){console.error("Error al renderizar PDF:",err);renderPDFNative(url)}}else{renderPDFNative(url)}}
-    function renderPDFNative(url){const ifr=document.createElement("iframe");ifr.className="pv-iframe";ifr.src=makePDFUrlWithZoom(url,zoom);pvView.appendChild(ifr);updateSliderTarget()}
-    function makePDFUrlWithZoom(url,z){const pct=Math.round(z*100);const [base,hash]=url.split("#");const params=new URLSearchParams(hash||"");params.set("zoom",String(pct));return base+"#"+params.toString()}
-    function rerenderIfPDF(){const isPDFJS=pvView.querySelector("canvas");const isNative=pvView.querySelector("iframe.pv-iframe");const url=resolveFileUrl(lastPreviewNode,previewFilePath);if(isPDFJS){pvView.innerHTML="";renderPDF(url);return}if(isNative){const ifr=pvView.querySelector("iframe.pv-iframe");if(ifr&&previewFilePath){ifr.src=makePDFUrlWithZoom(url,zoom)}}}
-    function updateSliderTarget(){const maxScroll=Math.max(0,pvView.scrollHeight-pvView.clientHeight);totalHeight=maxScroll||1;pvSlider.value=Math.round((pvView.scrollTop/totalHeight)*100)}
-    pvClose.addEventListener("click",()=>{hideOverlay()});pvZoomIn.addEventListener("click",()=>{zoom=Math.min(3,zoom+0.1);rerenderIfPDF();updateSliderTarget()});pvZoomOut.addEventListener("click",()=>{zoom=Math.max(0.5,zoom-0.1);rerenderIfPDF();updateSliderTarget()});pvSlider.addEventListener("input",()=>{const pct=Number(pvSlider.value)/100;pvView.scrollTop=pct*totalHeight});pvView.addEventListener("scroll",updateSliderTarget);window.addEventListener("keydown",(e)=>{if(e.key==="Escape")hideOverlay()});
-    async function syncFromHash(){const raw=decodeURIComponent(location.hash.replace(/^#/,""));if(raw.startsWith("/preview?file=")){const fp=raw.replace("/preview?file=",""),name=fp.split("/").pop(),ext=(name.split(".").pop()||"").toLowerCase();openPreview(fp,{name,type:"file",ext});return}hideOverlay();const path=raw.startsWith("/")?raw:("/"+raw);currentPath=path||"/";renderBreadcrumbs(currentPath);currentNode=findNodeByPath(datasetRoot,currentPath)||datasetRoot;renderList(currentNode)}
-    window.addEventListener("hashchange",syncFromHash);qEl.addEventListener("input",()=>renderList(currentNode));sortEl.addEventListener("change",()=>renderList(currentNode));upBtn.addEventListener("click",goUp);
-    if(!location.hash) setPathToHash("/"); syncFromHash();
+  let datasetRoot = null;
+  fetch("index.json").then(r=>r.ok?r.json():Promise.reject()).then(data=>{ datasetRoot=data; init(); }).catch(()=>{
+    datasetRoot={"name":"","type":"dir","children":[{"name":"Básicas","type":"dir","children":[{"name":"Física I","type":"dir","children":[{"name":"Parciales","type":"dir","children":[{"name":"FisicaI_Parcial-25-06-23-_Hecho_.pdf","type":"file","ext":"pdf","file":"FisicaI_Parcial-25-06-23-_Hecho_.pdf","date":"2025-06-23"}]},{"name":"Finales","type":"dir","children":[]},{"name":"Material de estudio","type":"dir","children":[]}]}]}]}; init();
   });
+
+  function init(){
+    if(!location.hash) setPathToHash("/");
+    syncFromHash();
+    window.addEventListener("hashchange", syncFromHash);
+    qEl.addEventListener("input",()=>renderList(currentNode));
+    sortEl.addEventListener("change",()=>renderList(currentNode));
+    upBtn.addEventListener("click", goUp);
+  }
+
+  let currentPath="/", currentNode=datasetRoot;
+  function renderBreadcrumbs(path){
+    bcEl.innerHTML=""; const frag=document.createDocumentFragment();
+    const add=(label,to)=>{ const a=document.createElement("a"); a.href="javascript:void(0)"; a.textContent=label||"Inicio"; a.addEventListener("click",()=>setPathToHash(to)); frag.appendChild(a); };
+    const parts=path.split("/").filter(Boolean); let acc="/"; add("Inicio","/");
+    for(let i=0;i<parts.length;i++){ const s=document.createElement("span"); s.className="sep"; s.textContent="/"; frag.appendChild(s); acc+=(acc.endsWith("/")?"":"/")+parts[i]; add(parts[i], acc); }
+    bcEl.appendChild(frag);
+  }
+  function renderList(node){
+    const q=(qEl.value||"").trim().toLowerCase(); const sort=sortEl.value;
+    let items=(node.children||[]).filter(Boolean); if(q) items=items.filter(it=>it.name.toLowerCase().includes(q)); items=sortItems(items,sort);
+    rowsEl.innerHTML=""; if(!items.length){ emptyEl.hidden=false; contribEl.hidden=true; return;} emptyEl.hidden=true;
+    for(const it of items){
+      const tr=document.createElement("tr");
+      const nameTd=document.createElement("td");
+      const link=document.createElement("a"); link.className="row"; link.href="javascript:void(0)"; link.innerHTML=`${iconFor(it)} <span>${it.name}</span>`;
+      link.addEventListener("click",()=>{ if(it.type==="dir"){ const next=(currentPath==="/"?"":currentPath)+"/"+it.name; setPathToHash(next);} else { const manifestPath=(currentPath==="/"?"":currentPath)+"/"+it.name; openPreview(manifestPath, it);} });
+      const wrap=document.createElement("div"); wrap.className="nameCell"; wrap.appendChild(link); nameTd.appendChild(wrap);
+      const typeTd=document.createElement("td"); typeTd.className="hide-sm"; const badge=document.createElement("span"); badge.className="type-badge"; badge.textContent=it.type==="dir"?"Carpeta":(it.ext?it.ext.toUpperCase():"Archivo"); typeTd.appendChild(badge);
+      const dateTd=document.createElement("td"); dateTd.className="hide-sm"; dateTd.textContent=fmtDate(it.date);
+      tr.appendChild(nameTd); tr.appendChild(typeTd); tr.appendChild(dateTd); rowsEl.appendChild(tr);
+    }
+    // Nota de colaboración
+    contribEl.hidden = false;
+    contribEl.textContent = "Si tenés algún parcial, final o material mandalo a este mail: " + CONTACT_EMAIL;
+  }
+  function goUp(){ if(currentPath==="/"||currentPath==="")return; const parts=currentPath.split("/").filter(Boolean); parts.pop(); const up="/"+parts.join("/"); setPathToHash(up||"/"); }
+
+  // Preview
+  let zoom=1, previewFilePath=null, totalHeight=1;
+  function resetPreview(){ pvView.innerHTML=""; zoom=1; pvSlider.value=0; totalHeight=1; }
+  function showOverlay(){ overlay.style.display="flex"; document.body.style.overflow="hidden"; } // lock scroll
+  function hideOverlay(){ overlay.style.display="none"; document.body.style.overflow=""; }
+  async function openPreview(path,node){
+    resetPreview(); previewFilePath=path; pvTitle.textContent=node?.name||path.split("/").pop(); showOverlay();
+    const ext=(node?.ext||path.split(".").pop()||"").toLowerCase();
+    if(["jpg","jpeg","png","webp","gif"].includes(ext)){ const img=document.createElement("img"); img.className="pv-img"; img.alt=node?.name||"Imagen"; img.src=resolveFileUrl(node,path); pvView.appendChild(img); updateSliderTarget(); return; }
+    if(ext==="pdf"){ await renderPDF(resolveFileUrl(node,path)); return; }
+    const p=document.createElement("p"); p.style.color="var(--muted)"; p.style.padding="56px 16px"; p.textContent="Tipo de archivo no soportado en el visor."; pvView.appendChild(p);
+  }
+  async function renderPDF(url){
+    const pdfjs=await ensurePDFJS();
+    if(pdfjs){
+      try{ const loading=pdfjs.getDocument(url); const pdf=await loading.promise;
+        for(let p=1;p<=pdf.numPages;p++){ const page=await pdf.getPage(p); const viewport=page.getViewport({scale:zoom}); const canvas=document.createElement("canvas"); canvas.className="pv-canvas"; const ctx=canvas.getContext("2d"); canvas.width=viewport.width; canvas.height=viewport.height; await page.render({canvasContext:ctx,viewport}).promise; pvView.appendChild(canvas); }
+        updateSliderTarget();
+      }catch(e){ renderPDFNative(url); }
+    }else{ renderPDFNative(url); }
+  }
+  function renderPDFNative(url){ const ifr=document.createElement("iframe"); ifr.className="pv-iframe"; ifr.src=makePDFUrlWithZoom(url, zoom); pvView.appendChild(ifr); updateSliderTarget(); }
+  function makePDFUrlWithZoom(url,z){ const pct=Math.round(z*100); const [base,hash]=url.split("#"); const params=new URLSearchParams(hash||""); params.set("zoom", String(pct)); return base+"#"+params.toString(); }
+  function updateSliderTarget(){ const maxScroll=Math.max(0, pvView.scrollHeight - pvView.clientHeight); totalHeight=maxScroll||1; pvSlider.value=Math.round((pvView.scrollTop/totalHeight)*100); }
+  pvClose.addEventListener("click",()=>{ hideOverlay(); });
+  pvSlider.addEventListener("input",()=>{ const pct=Number(pvSlider.value)/100; pvView.scrollTop=pct*totalHeight; });
+  pvView.addEventListener("scroll", updateSliderTarget);
+  window.addEventListener("keydown",(e)=>{ if(e.key==="Escape") hideOverlay(); });
+
+  async function syncFromHash(){ const raw=decodeURIComponent(location.hash.replace(/^#/,"")); if(raw.startsWith("/preview?file=")){ const fp=raw.replace("/preview?file=",""), name=fp.split("/").pop(), ext=(name.split(".").pop()||"").toLowerCase(); openPreview(fp,{name,type:"file",ext}); return; } hideOverlay(); const path=raw.startsWith("/")?raw:("/"+raw); currentPath=path||"/"; renderBreadcrumbs(currentPath); currentNode=findNodeByPath(datasetRoot,currentPath)||datasetRoot; renderList(currentNode); }
 })();
 </script>
 </body>
