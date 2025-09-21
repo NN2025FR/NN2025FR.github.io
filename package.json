@@ -1,0 +1,12 @@
+{
+  "name": "frgp-biblioteca",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "ingest": "node tools/ingest-files.mjs",
+    "ingest:dry": "node tools/ingest-files.mjs --dry-run"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
