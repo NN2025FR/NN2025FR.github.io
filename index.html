@@ -1,5 +1,7 @@
 <!doctype html>
+codex/confirmar-ajustes-en-navegacion-y-ayuda-az537d
 <html lang="es" data-theme="dark">
+main
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -7,10 +9,12 @@
   <meta name="description" content="Parciales, finales y material de estudio de la FRGP/UTN." />
   <style>
     :root {
+codex/confirmar-ajustes-en-navegacion-y-ayuda-az537d
       color-scheme: dark;
       --font-base: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       --transition-speed: 150ms;
       --wrap-width: min(1440px, calc(100% - 528px));
+ main
 
       --bg: #0b0d10;
       --panel: #12151a;
@@ -27,7 +31,9 @@
     [data-theme="light"] {
       --bg: #f6f8fb;
       --panel: #ffffff;
+codex/confirmar-ajustes-en-navegacion-y-ayuda-az537d
       color-scheme: light;
+main
       --panel-border: #dfe5ee;
       --panel-muted: rgba(0,0,0,0.04);
       --text: #101418;
@@ -343,16 +349,20 @@
       bottom: 0;
       width: 240px;
       display: flex;
+codex/confirmar-ajustes-en-navegacion-y-ayuda-az537d
       align-items: stretch;
       justify-content: center;
       padding: 12px;
+ main
       pointer-events: none;
     }
 
     .ad-rail > div {
       width: 100%;
       min-height: 320px;
+codex/confirmar-ajustes-en-navegacion-y-ayuda-az537d
       height: 100%;
+main
       border-radius: 16px;
       border: 1px dashed var(--panel-border);
       background: var(--panel-muted);
@@ -378,7 +388,9 @@
         display: none;
       }
       :root {
+codex/confirmar-ajustes-en-navegacion-y-ayuda-az537d
         --wrap-width: min(1120px, calc(100% - 32px));
+main
       }
     }
 
@@ -439,6 +451,7 @@
       color: inherit;
       font-size: 1.35rem;
       line-height: 1;
+codex/confirmar-ajustes-en-navegacion-y-ayuda-az537d
       padding: 6px 10px;
       min-width: 44px;
       min-height: 44px;
@@ -446,6 +459,7 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
+ main
       border-radius: 999px;
       transition: background-color var(--transition-speed) ease, transform var(--transition-speed) ease;
     }
@@ -533,7 +547,9 @@
           <p class="tagline">Parciales, finales y material colaborativo</p>
         </div>
         <div class="actions">
+codex/confirmar-ajustes-en-navegacion-y-ayuda-az537d
           <button type="button" class="theme-toggle" id="themeToggle" aria-live="polite" aria-pressed="false">
+ main
             <span aria-hidden="true">🌙</span>
             <span class="label">Tema oscuro</span>
           </button>
@@ -575,7 +591,9 @@
         <ol>
           <li>Nombrá el archivo siguiendo el formato <code>Carpeta_Subcarpeta_Subcarpeta_NombreDelArchivo.pdf</code>. Ejemplo: <code>Basicas_FisicaI_Parciales_TP1.pdf</code>.</li>
           <li>Copiá el PDF en la carpeta <code>/files</code> del repositorio (podés arrastrarlo desde el explorador o usar Git).</li>
+codex/confirmar-ajustes-en-navegacion-y-ayuda-az537d
           <li>Ejecutá <code>npm run ingest</code> o <code>node tools/ingest-files.mjs</code>. El script separa los segmentos con <code>_</code>, arma la ruta con los tres primeros (Carpeta/Subcarpeta/Subcarpeta) y crea la entrada del PDF en <code>index.json</code>.</li>
+main
           <li>Verificá que aparezca en la sección correcta y hacé commit de <code>index.json</code> y del PDF nuevo.</li>
         </ol>
         <p>Si necesitás más niveles (por ejemplo año → materia → parciales) adaptá el nombre respetando el orden y actualizá el script en <code>tools/ingest-files.mjs</code>.</p>
@@ -617,7 +635,9 @@
     const overlayBodyEl = document.getElementById('viewerBody');
     const overlayCloseEl = document.getElementById('viewerClose');
     const overlayLoaderEl = document.getElementById('viewerLoader');
+codex/confirmar-ajustes-en-navegacion-y-ayuda-az537d
     const prefersLightScheme = window.matchMedia ? window.matchMedia('(prefers-color-scheme: light)') : null;
+main
 
     let datasetRoot = null;
     let currentNode = null;
@@ -626,8 +646,10 @@
     let sortMode = DEFAULT_SORT;
     let lastFocusedElement = null;
     let pdfjsReady = false;
+codex/confirmar-ajustes-en-navegacion-y-ayuda-az537d
     let isOverlayOpen = false;
     let activePreviewToken = 0;
+main
 
     const icons = {
       folder: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z" /></svg>',
@@ -664,6 +686,7 @@
       contactNoteEl.innerHTML = `Si tenés algún parcial, final o material mandalo a <strong><a href="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a></strong> y lo sumamos.`;
     }
 
+codex/confirmar-ajustes-en-navegacion-y-ayuda-az537d
     function applyTheme(theme, { persist = true } = {}) {
       const root = document.documentElement;
       const next = theme === 'light' ? 'light' : 'dark';
@@ -709,6 +732,7 @@
 
     function setThemeFromToggle() {
       const current = document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+main
       const next = current === 'dark' ? 'light' : 'dark';
       applyTheme(next);
     }
@@ -898,9 +922,11 @@
     }
 
     function closeOverlay() {
+codex/confirmar-ajustes-en-navegacion-y-ayuda-az537d
       if (!isOverlayOpen) return;
       isOverlayOpen = false;
       activePreviewToken += 1;
+main
       overlayEl.classList.remove('is-visible');
       overlayEl.hidden = true;
       document.body.classList.remove('has-overlay');
@@ -959,7 +985,9 @@
       return window.pdfjsLib;
     }
 
+codex/confirmar-ajustes-en-navegacion-y-ayuda-az537d
     async function renderWithPdfJs(fileNode, fileUrl, token) {
+main
       overlayLoaderEl.hidden = false;
       const container = document.createElement('div');
       container.className = 'pdf-pages';
@@ -972,9 +1000,11 @@
         const total = pdfDocument.numPages;
 
         for (let pageNumber = 1; pageNumber <= total; pageNumber += 1) {
+codex/confirmar-ajustes-en-navegacion-y-ayuda-az537d
           if (token !== activePreviewToken) {
             return;
           }
+ main
           const page = await pdfDocument.getPage(pageNumber);
           const viewport = page.getViewport({ scale: 1.2 });
           const canvas = document.createElement('canvas');
@@ -988,13 +1018,16 @@
           const pageWrapper = document.createElement('div');
           pageWrapper.className = 'pdf-page';
           pageWrapper.appendChild(canvas);
+codex/confirmar-ajustes-en-navegacion-y-ayuda-az537d
           if (token !== activePreviewToken) {
             return;
           }
+main
           container.appendChild(pageWrapper);
           await page.render(renderContext).promise;
         }
 
+codex/confirmar-ajustes-en-navegacion-y-ayuda-az537d
         if (token !== activePreviewToken) {
           return;
         }
@@ -1015,6 +1048,7 @@
       if (token !== activePreviewToken) {
         return;
       }
+main
       const iframe = document.createElement('iframe');
       iframe.src = `${fileUrl}#zoom=page-width`;
       iframe.title = 'Vista previa del archivo PDF';
@@ -1025,9 +1059,11 @@
 
     async function openPreview(fileNode) {
       if (!fileNode || !fileNode.file) return;
+codex/confirmar-ajustes-en-navegacion-y-ayuda-az537d
       const token = activePreviewToken + 1;
       activePreviewToken = token;
       isOverlayOpen = true;
+main
       lastFocusedElement = document.activeElement;
       overlayTitleEl.textContent = fileNode.name;
       overlayBodyEl.innerHTML = '';
@@ -1047,11 +1083,13 @@
       document.addEventListener('keydown', onOverlayKeydown);
 
       try {
+ codex/confirmar-ajustes-en-navegacion-y-ayuda-az537d
         await renderWithPdfJs(fileNode, fileUrl, token);
       } catch (error) {
         console.warn('Fallo al renderizar con PDF.js, se usará iframe', error);
         overlayLoaderEl.hidden = true;
         renderWithIframeFallback(fileUrl, token);
+main
       }
     }
 
@@ -1073,6 +1111,7 @@
       });
 
       themeToggleEl.addEventListener('click', setThemeFromToggle);
+codex/confirmar-ajustes-en-navegacion-y-ayuda-az537d
       if (prefersLightScheme) {
         const handleSchemeChange = (event) => {
           if (getStoredTheme()) {
@@ -1091,14 +1130,17 @@
         event.stopPropagation();
         closeOverlay();
       });
+main
 
       window.addEventListener('hashchange', syncFromHash);
     }
 
     async function init() {
+codex/confirmar-ajustes-en-navegacion-y-ayuda-az537d
       const storedTheme = getStoredTheme();
       const initialTheme = storedTheme ?? getPreferredTheme();
       applyTheme(initialTheme, { persist: Boolean(storedTheme) });
+ main
       setContactNote();
       bindEvents();
       try {
