@@ -1,0 +1,167 @@
+{
+  "name": "Biblioteca FRGP",
+  "type": "dir",
+  "children": [
+    {
+      "name": "Básicas",
+      "type": "dir",
+      "children": [
+        {
+          "name": "Física I",
+          "type": "dir",
+          "children": [
+            {
+              "name": "Parciales",
+              "type": "dir",
+              "children": [
+                {
+                  "name": "Parcial 25-06-23 (Hecho)",
+                  "type": "file",
+                  "ext": "pdf",
+                  "file": "FisicaI_Parcial-25-06-23-_Hecho_.pdf",
+                  "date": "2023-06-25"
+                }
+              ]
+            },
+            {
+              "name": "Finales",
+              "type": "dir",
+              "children": []
+            },
+            {
+              "name": "Material de estudio",
+              "type": "dir",
+              "children": []
+            }
+          ]
+        },
+        {
+          "name": "Análisis Matemático I",
+          "type": "dir",
+          "children": [
+            {
+              "name": "Parciales",
+              "type": "dir",
+              "children": []
+            },
+            {
+              "name": "Finales",
+              "type": "dir",
+              "children": []
+            },
+            {
+              "name": "Material de estudio",
+              "type": "dir",
+              "children": []
+            }
+          ]
+        },
+        {
+          "name": "Álgebra y Geometría Analítica",
+          "type": "dir",
+          "children": [
+            {
+              "name": "Parciales",
+              "type": "dir",
+              "children": []
+            },
+            {
+              "name": "Finales",
+              "type": "dir",
+              "children": []
+            },
+            {
+              "name": "Material de estudio",
+              "type": "dir",
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Ingeniería Civil",
+      "type": "dir",
+      "children": [
+        {
+          "name": "Primer año",
+          "type": "dir",
+          "children": [
+            {
+              "name": "Estática",
+              "type": "dir",
+              "children": [
+                { "name": "Parciales", "type": "dir", "children": [] },
+                { "name": "Finales", "type": "dir", "children": [] },
+                { "name": "Material de estudio", "type": "dir", "children": [] }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Segundo año",
+          "type": "dir",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "Ingeniería Eléctrica",
+      "type": "dir",
+      "children": [
+        {
+          "name": "Primer año",
+          "type": "dir",
+          "children": [
+            {
+              "name": "Electrotecnia",
+              "type": "dir",
+              "children": [
+                { "name": "Parciales", "type": "dir", "children": [] },
+                { "name": "Finales", "type": "dir", "children": [] },
+                { "name": "Material de estudio", "type": "dir", "children": [] }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Segundo año",
+          "type": "dir",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "Industria Automotriz",
+      "type": "dir",
+      "children": [
+        {
+          "name": "Primer año",
+          "type": "dir",
+          "children": []
+        },
+        {
+          "name": "Segundo año",
+          "type": "dir",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "Mecánica",
+      "type": "dir",
+      "children": [
+        {
+          "name": "Primer año",
+          "type": "dir",
+          "children": []
+        },
+        {
+          "name": "Segundo año",
+          "type": "dir",
+          "children": []
+        }
+      ]
+    }
+  ]
+}
